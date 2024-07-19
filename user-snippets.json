@@ -1,0 +1,392 @@
+{
+	"mCoreGetSharedObj": {
+		"scope": "lua",
+		"prefix": "mCore.getSharedObj",
+		"body": [
+			"mCore = exports[\"mateExports\"]:getSharedObj()"
+		],
+		"description": "Get shared object using mCore"
+	},
+	"mCoreGetXPlayer": {
+		"scope": "lua",
+		"prefix": "mCore.getXPlayer",
+		"body": [
+			"mCore.getXPlayer(${2|src,source,xPlayer.source|})"
+		],
+		"description": "Get XPlayer using mCore"
+	},
+	// NOTIFY
+	"CLIENT: mCore.Notify": {
+		"scope": "lua",
+		"prefix": "mCore.Notify",
+		"body": "mCore.Notify(\"$title\",\"$message\", \"$type\", $duration)"
+	},
+	// Draw 3D
+	"CLIENT: mCore.Draw3DText": {
+		"scope": "lua",
+		"prefix": "mCore.Draw3DText",
+		"body": [
+			"mCore.Draw3DText($x, $y, $z, $scaleFactor, \"$text\")"
+		]
+	},
+	"CLIENT: mCore.draw3DTextiWthRainbowFlow": {
+		"scope": "lua",
+		"prefix": "mCore.draw3DTextiWthRainbowFlow",
+		"body": "mCore.draw3DTextiWthRainbowFlow($vector3, \"$text\", $ColorTable, $duration)"
+	},
+	"CLIENT: mCore.DrawCustomMarker": {
+		"scope": "lua",
+		"prefix": "mCore.DrawCustomMarker",
+		"body": "mCore.DrawCustomMarker($Coords, $markerType, vec3(1.0, 1.0, 1.0), vec4(255, 0, 0, 255))"
+	},
+	// LOG
+	"SHARED: mCore.log": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.log"
+		],
+		"body": "mCore.log(\"$message\")"
+	},
+	"SHARED: mCore.server.error": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.error"
+		],
+		"body": "mCore.error(\"$message\")"
+	},
+	"SHARED: mCore.debug.log": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.debug.log"
+		],
+		"body": "mCore.debug.log(\"$message\")"
+	},
+	"SHARED: mCore.debug.error": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.debug.error"
+		],
+		"body": "mCore.debug.error(\"$message\")"
+	},
+	// Version Check
+	"SERVER: mCore.versionCheck": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.versionCheck"
+		],
+		"body": "mCore.versionCheck(\"$githubRepostry\")"
+	},
+	"SERVER: mCore.getPlayers": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.getPlayers"
+		],
+		"body": "mCore.getPlayers()"
+	},
+	"SERVER: mCore.mPlayer": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.mPlayer"
+		],
+		"body": "mCore.mPlayer()"
+	},
+	"SERVER: mCore.createSQLColumnToUsers": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.createSQLColumnToUsers"
+		],
+		"body": "mCore.createSQLColumnToUsers(\"$columnName\", \"$type\")"
+	},
+	"SERVER: mCore.createSQLTable": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.createSQLTable"
+		],
+		"body": [
+			"local table = {",
+			"     \"`identifier` VARCHAR(255) PRIMARY KEY\",",
+			"     \"`level` INT(25)\",",
+			"     \"`xp` INT(25)\",",
+			"}\n\n",
+			"mCore.createSQLTable(\"$tableName\", table)",
+		]
+	},
+	// ADMIN STUFF
+	"SERVER: mCore.isGroupAdmin": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.isGroupAdmin"
+		],
+		"body": "mCore.isAdmin(\"$groupName\")"
+	},
+	"SERVER: mCore.getAdminLevel": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.getAdminLevel"
+		],
+		"body": "mCore.getAdminLevel(\"$groupName\")"
+	},
+	"SERVER: mCore.getAdminGroups": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.getAdminGroups"
+		],
+		"body": "mCore.getAdminGroups()"
+	},
+	"SERVER: mCore.getFullAdminGroups": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.getFullAdminGroups"
+		],
+		"body": "mCore.getFullAdminGroups()",
+		"description": "Returns the entier adminGroups table"
+	},
+	// Discord
+	"SERVER: mCore.getBotToken": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.getBotToken"
+		],
+		"body": "mCore.getBotToken()",
+		"description": "Returns the discord bot token"
+	},
+	"SERVER: mCore.GetDiscord": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.GetDiscord"
+		],
+		"body": [
+			"mCore.GetDiscord(${2|src, soruce, xPlayer.source|}, function(res)",
+			"    if not res.errCode == 0 then",
+			"        return mCore.error(res.error)",
+			"    end",
+			"",
+			"    local dUser = res.dUser",
+			"end)",
+		],
+		"description": "Returns the user discord picture and name"
+	},
+	"SERVER: mCore.GetDiscordByIdentifier": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.GetDiscordByIdentifier"
+		],
+		"body": "mCore.GetDiscordByIdentifier(\"$identifier\")",
+		"description": "Returns the user discord picture and name"
+	},
+	"SERVER: mCore.RequestWebhook": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.RequestWebhook"
+		],
+		"body": "mCore.RequestWebhook(\"$webhookId\")",
+		"description": "Return a webhook"
+	},
+	"dUser: Image": {
+		"scope": "lua",
+		"prefix": "dUser.img",
+		"body": "dUser.img"
+	},
+	"dUser: Name": {
+		"scope": "lua",
+		"prefix": "dUser.name",
+		"body": "dUser.name"
+	},
+	"dUser: ID": {
+		"scope": "lua",
+		"prefix": "dUser.id",
+		"body": "dUser.id"
+	},
+	// Admin
+	"SERVER: mate-admin:isAdmin": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.isAdmin",
+			"isAdmin",
+			"mate-admin"
+		],
+		"body": "exports[\"mate-admin\"]:isAdmin(${2|src, soruce, xPlayer.source|})",
+		"description": "Check player is admin"
+	},
+	// SendToDiscord 
+	"SERVER: mCore.sendMessage": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.sendMessage",
+		],
+		"body": "mCore.sendMessage(\"$message\", $webhook, \"$BotName\")",
+		"description": "Send a message to discord tru webhook"
+	},
+	"SERVER: mCore.sendEmbed": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.sendEmbed",
+		],
+		"body": "mCore.sendEmbed($embed, $webhook, \"$BotName\")",
+		"description": "Send an embed message to discord tru webhook"
+	},
+	// VIP
+	"SERVER: mCore.getVIPUser": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.getVIPUser",
+		],
+		"body": [
+			"mCore.getVIPUser(${1|src,source,xPlayer.source|}, function(res)",
+			"    if not res.errCore == 0 then",
+			"        return mCore.error(res.message)",
+			"    end",
+			"    local vipUser = res.vipUser",
+			"end)",
+		],
+		"description": "Get player vip level by id"
+	},
+	"VIPUSER: isVIp": {
+		"scope": "lua",
+		"prefix": "vipUser.isVip",
+		"body": "vipUser.isVip"
+	},
+	"VIPUSER: level": {
+		"scope": "lua",
+		"prefix": "vipUser.level",
+		"body": "vipUser.level"
+	},
+	"Debug: isDebug": {
+		"scope": "lua",
+		"prefix": "mCore.isDebug",
+		"body": "mCore.isDebug()"
+	},
+	// 1.6.3
+	"CLIENT: mCore.loadModel": {
+		"scope": "lua",
+		"prefix": "mCore.loadModel",
+		"body": "mCore.loadModel(\"$model\")"
+	},
+	"CLIENT: mCore.unloadModel": {
+		"scope": "lua",
+		"prefix": "mCore.unloadModel",
+		"body": "mCore.unloadModel(\"$model\")"
+	},
+	"CLIENT: mCore.loadAnimDict": {
+		"scope": "lua",
+		"prefix": "mCore.loadAnimDict",
+		"body": "mCore.loadAnimDict(\"$dict\")"
+	},
+	"CLIENT: mCore.unloadAnimDict": {
+		"scope": "lua",
+		"prefix": "mCore.unloadAnimDict",
+		"body": "mCore.unloadAnimDict(\"$dict\")"
+	},
+	"CLIENT: mCore.loadPtfxDict": {
+		"scope": "lua",
+		"prefix": "mCore.loadPtfxDict",
+		"body": "mCore.loadPtfxDict(\"$dict\")"
+	},
+	"CLIENT: mCore.unloadPtfxDict": {
+		"scope": "lua",
+		"prefix": "mCore.unloadPtfxDict",
+		"body": "mCore.unloadPtfxDict(\"$dict\")"
+	},
+	"CLIENT: mCore.makeProp": {
+		"scope": "lua",
+		"prefix": "mCore.makeProp",
+		"body": [
+			"mCore.makeProp({",
+			"     prop   = \"prop_barier_conc_01b\",",
+			"     coords = vec3(0.0, 0.0, 0.0),",
+			"},${1|true,false|}--[[freezed]], ${2|false,true|}--[[synced]])",
+		]
+	},
+	"CLIENT: mCore.makeBlip": {
+		"scope": "lua",
+		"prefix": "mCore.makeBlip",
+		"body": [
+			"mCore.makeBlip({",
+			"     coords = vec3(0.0, 0.0, 0.0),",
+			"     sprite = 1,",
+			"     col    = 0,",
+			"     scale  = 0.7,",
+			"     disp   = 6,",
+			"     name   = \"$name\",",
+			"})",
+		]
+	},
+	"CLIENT: mCore.makePed": {
+		"scope": "lua",
+		"prefix": "mCore.makePed",
+		"body": "mCore.makePed(\"${1|model|}\", ${2|vec3|}, ${3|freeze,true|}, ${4|collision,false|}, \"${5|scenario|}\", \"${6|anim|}\")"
+	},
+	"CLIENT: mCore.destoryProp": {
+		"scope": "lua",
+		"prefix": "mCore.destoryProp",
+		"body": "mCore.destoryProp(\"$entity\")"
+	},
+	"CLIENT: mCore.loadDrillSound": {
+		"scope": "lua",
+		"prefix": "mCore.loadDrillSound",
+		"body": "mCore.loadDrillSound()"
+	},
+	"CLIENT: mCore.unloadScriptHostedSounds": {
+		"scope": "lua",
+		"prefix": "mCore.unloadSounds",
+		"body": [
+			"ReleaseScriptAudioBank()",
+		]
+	},
+	"CLIENT: mCore.lookAtMe": {
+		"description": "Turn entity head to Player Ped",
+		"scope": "lua",
+		"prefix": "mCore.lookAtMe",
+		"body": [
+			"mCore.lookAtMe($entity)",
+		]
+	},
+	"CLIENT: mCore.lookEnt": {
+		"description": "Turn player ped head to entity",
+		"scope": "lua",
+		"prefix": "mCore.lookEnt",
+		"body": [
+			"mCore.lookEnt(${2|entity,vec3|})",
+		]
+	},
+	"CLIENT: mCore.lockInv": {
+		"description": "Lock or unLock player inventory usage",
+		"scope": "lua",
+		"prefix": "mCore.lockInv",
+		"body": [
+			"mCore.lockInv(${2|true,false|})",
+		]
+	},
+	"CLIENT: mCore.HasItem": {
+		"scope": "lua",
+		"prefix": "mCore.HasItem",
+		"body": [
+			"mCore.HasItem(${1|\"itemName\"|}, ${2|1,NumberOfItemNeeded|})",
+		]
+	},
+	"CLIENT: mCore.pairsByKeys": {
+		"scope": "lua",
+		"prefix": "mCore.pairsByKeys",
+		"body": [
+			"mCore.pairsByKeys(${1|table|})",
+		]
+	},
+	"CLIENT: mCore.progressBar": {
+		"description": "Useing oxProgressbar in smart function",
+		"scope": "lua",
+		"prefix": "mCore.progressBar",
+		"body": [
+			"if mCore.progressBar({",
+			"         time   = mCore.isDebug() and 1500 or 5000,",
+			"         label  = \"${1|Displayed_Message|}\",",
+			"         dead   = ${2|true,false,enableWhileDead|},",
+			"         cancel = ${3|true,false,canCancel|},",
+			"         dict   = ${4|dict, \"animDict\"|},",
+			"         anim   = ${5|anim, \"animClip\"|},",
+			"         task   = \"scenario\",",
+			"    }) then ",
+			"     -- After Finish",
+			"end",
+		]
+	},
+}
