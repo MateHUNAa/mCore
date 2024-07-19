@@ -134,7 +134,7 @@ end
 
 
 
-if currentFileName ~= 'mateExports' then
+if currentFileName ~= 'mCore' then
     for i = 1, 10 do
         print("You cannot use this resource server will shutdown in 5 sec")
     end
@@ -245,17 +245,6 @@ CreateThread(function()
         print(art)
     end
 end)
-
-
-RegisterNetEvent('mateExports:ensureDevTools:protected', function(initiator)
-    if debug then
-        ExecuteCommand("ensure [devTools]")
-    else
-        exports['mateExports']:sendMessage(webhook, "EXPLOIT",
-            string.format("%s Tried to ensure DevTools ( DEBUG ONLY ) ", GetPlayerName(initiator)))
-    end
-end)
-
 
 --
 -- Initial Load
