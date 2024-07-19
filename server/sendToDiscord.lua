@@ -1,10 +1,5 @@
 ESX = exports["es_extended"]:getSharedObject()
 
-CreateThread(function()
-    TriggerEvent('matehun-ResourceValidationSystem:initSubModule', 'mate-discordHook')
-end)
-
-
 function sendMessage(webhook, name, message)
     if not webhook then
         print('[ERROR]: No webhook provided Invoke: ' .. GetInvokingResource())

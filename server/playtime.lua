@@ -16,28 +16,6 @@ function createSQLColumn(name)
 	return p
 end
 
-CreateThread(function()
-	Citizen.Await(createSQLColumn("playedTime"))
-
-	for _, player in pairs(GetPlayers()) do
-		local sb = Player(player).state
-
-		if not sb.joinTime then
-			Player(player).state.joinTime = os.time()
-		end
-
-		if not sb.playedTime then
-			loadPlayerPlayedTime(player)
-		end
-	end
-end)
-
-AddEventHandler("esx:playerLoaded", function(player)
-	Player(player).state.joinTime = os.time()
-	loadPlayerPlayedTime(player)
-end)
-
-
 function loadPlayerPlayedTime(player)
 	local xPlayer = ESX.GetPlayerFromId(player)
 	if not xPlayer then
@@ -62,6 +40,29 @@ function savePlayedTime(player)
 	exports.oxmysql:update("UPDATE users SET playedTime = ? WHERE identifier = ?", { newTime, xPlayer.identifier })
 end
 
-AddEventHandler("playerDropped", function()
-	savePlayedTime(source)
-end)
+if Config.PlayTime.Enable then
+	AddEventHandler("esx:playerLoaded", function(player)
+		Player(player).state.joinTime = os.time()
+		loadPlayerPlayedTime(player)
+	end)
+
+	AddEventHandler("playerDropped", function()
+		savePlayedTime(source)
+	end)
+
+	CreateThread(function()
+		Citizen.Await(createSQLColumn("playedTime"))
+
+		for _, player in pairs(GetPlayers()) do
+			local sb = Player(player).state
+
+			if not sb.joinTime then
+				Player(player).state.joinTime = os.time()
+			end
+
+			if not sb.playedTime then
+				loadPlayerPlayedTime(player)
+			end
+		end
+	end)
+end
