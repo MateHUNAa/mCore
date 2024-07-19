@@ -97,7 +97,7 @@ mCore.versionCheck = function(repository)
             end, 'GET')
     end)
 end
-mCore.versionCheck("MateHUNAa/mateExports")
+mCore.versionCheck("MateHUNAa/mCore")
 
 Citizen.CreateThread(function()
     local vc = GetConvar("matehun:versionCheckLoop", "0") ~= '0'
@@ -105,7 +105,7 @@ Citizen.CreateThread(function()
     if vc then
         while true do
             Citizen.Wait(35 * 1000)
-            mCore.versionCheck("MateHUNAa/mateExports")
+            mCore.versionCheck("MateHUNAa/mCore")
         end
     end
 end)
