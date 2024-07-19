@@ -1,45 +1,53 @@
-Config = {}
+Config             = {}
 
-Config.MateLicenseKey = 'matehun-KteQObyBcApk8CB7exNU03ezv8GGdxDzfLuoJEHcAAoYa6J5dW2XICWOKetsaP'
+Config.BotToken    = "" -- Discord bot token for `discord_rest`
 
-Config.BotToken = "NzkxMzM0NTY4NjAyNTAxMTUx.GoAzCP.n0ScX6B4KxF3j3h7v2UXNGEEHxR6r2fydF6MJs"
+Config.Webhook     = "" -- Global Webhook !IMPORTANT!
 
-
-Config.Webhook = -- GLOBAL
-"https://discord.com/api/webhooks/1237308115972784178/OiGCZCXFiar0oT3kZxfDNO9rVlGkGGK1W8TABLDjUGu4Gg9J_z3OOV_kSq947i0gket2"
-
-Config.Webhooks = {
-     ['money'] =
-     "https://discord.com/api/webhooks/1251335113283862559/c_-UE7UPv5basJY0l1RX7qTet1esCcy8JlfnIczdxIHfxB7UP9x1cv8KRhxdXVpswzbh",
-     ["error"] =
-     "https://discord.com/api/webhooks/1249423124487999558/d_H0nOeSG8xSecRc93GnZXaSwUSP3sUKS-KZ-ETI04_lYm-pwSoXcQyA8jgwswyMoWWs",
-     ["exploit"] =
-     "https://discord.com/api/webhooks/1240105530702430228/YZ7AzYbu_NqgQsZ5U3huwPPei1N0oKppDfZfTNTv_06ERP3QGXeiMrFzp5KWzAi1Q0oS",
-     ["harvest"] =
-     "https://discord.com/api/webhooks/1251961082130727013/AjOwBkkWvqM9sE0V0aHzZ2pB9i_FYyRi6AaJhpKAMrqsnp1hIbtOGRLqvIq25kn65XFr"
+Config.Webhooks    = {
+     ['money']   = "",    -- Each is optional please use false if not using !
+     ["error"]   = "",    -- Each is optional please use false if not using !
+     ["exploit"] = "",    -- Each is optional please use false if not using !
+     ["harvest"] = "",    -- Each is optional please use false if not using !
+     ["example"] = false, -- Each is optional please use false if not using !
 }
 
 Config.NotifyTypes = {
-     ["info"] = true,
+     ["info"]    = true,
      ["success"] = true,
-     ["error"] = true,
-     ["lsp"] = true,
-     ["ems"] = true,
+     ["error"]   = true,
+     ["lsp"]     = true,
+     ["ems"]     = true,
 }
 
-Config.Notify = (function(playerId, title, message, type, dur)
-     for t in pairs(Config.NotifyTypes) do
-          if not type == t then type = Config.NotifyTypes[1] end
+Config.Icons       = { -- For custom marker you can adjust the .png name here! only the file name needed dont add .extension after file name
+     "rime"
+}
+
+
+Config.Notify  = (function(playerId, title, message, type, dur)
+     if not Config.NotifyTypes[type] then
+          for t in pairs(Config.NotifyTypes) do
+               if not type == t then type = Config.NotifyTypes[1] end
+          end
      end
+
      if not dur or dur == 0 then dur = 5000 end
+     
+     -- Change Notification here ! VV
      TriggerClientEvent("codem-notification:Create", playerId, message, type, title, dur)
 end)
 
 Config.CNotify = (function(title, message, type, dur)
-     for t in pairs(Config.NotifyTypes) do
-          if not type == t then type = Config.NotifyTypes[1] end
+     if not Config.NotifyTypes[type] then
+          for t in pairs(Config.NotifyTypes) do
+               if not type == t then type = Config.NotifyTypes[1] end
+          end
      end
+
      if not dur or dur == 0 then dur = 5000 end
+
+     -- Change Notification here ! VV
      TriggerEvent("codem-notification:Create", message, type, title, dur)
 end)
 
@@ -52,6 +60,9 @@ function rndColor()
      }
 end
 
+--
+-- Admin Groups will be removed later ! ( mCore not using )
+--
 Config.AdminGroups = {
      ["helper"] = {
           true,
@@ -115,16 +126,8 @@ Config.AdminGroups = {
      }
 }
 
-
-
 --
 -- Do not touch
 --
 
-
 Config.profilePicTemplateString = "https://cdn.discordapp.com/avatars/%s/%s.png?size=1024"
-
-
-Config.Icons = {
-     "rime"
-}
