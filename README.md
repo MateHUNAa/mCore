@@ -1,5 +1,5 @@
-# mCore Framework
-`mCore` is a Lua-based framework designed for use in FiveM, a multiplayer modification framework for GTA V. This framework provides various utilities and functions to enhance your development process, including notification systems, 3D text rendering, debug logging, model handling, and more.
+# mCore "Framework"
+`mCore` is a utility framework packed with various tools and functions beneficial for developers.
 
 # Features
 - Shared Object Exporting: Easily export the shared object for global access.
