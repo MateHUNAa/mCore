@@ -381,74 +381,6 @@ CreateThread(function()
     end
 end)
 
-
-
-
---
--- Admin Stuff
---
-
-function isAdmin(group)
-    for g in pairs(Config.AdminGroups) do
-        if g == group then
-            break
-        end
-    end
-    if Config.AdminGroups[group] then
-        return Config.AdminGroups[group][1] or false
-    else
-        return false
-    end
-end
-
-mCore.isAdmin = function(group)
-    isAdmin(group)
-end
-
-exports("isAdmin", isAdmin)
-
-function getAdminLevel(group)
-    for g in pairs(Config.AdminGroups) do
-        if g == group then
-            break
-        end
-    end
-    if isAdmin(group) then
-        return Config.AdminGroups[group][2] or nil
-    end
-end
-
-exports("getAdminLevel", getAdminLevel)
-
-ESX.RegisterServerCallback('mateExports:admin:isAdmin', function(src, cb)
-    local xPlayer = ESX.GetPlayerFromId(src)
-    while not xPlayer do Wait(100) end
-    local xGroup = xPlayer.getGroup()
-    cb(isAdmin(xGroup))
-end)
-
-
-function getAdminGroups()
-    local groups = {}
-    for group, _ in pairs(Config.AdminGroups) do
-        table.insert(groups, group)
-    end
-    return groups
-end
-
-exports('getAdminGroups', getAdminGroups)
-
-
-function getFullAdminGroups()
-    return Config.AdminGroups
-end
-
-exports("getFullAdminGroups", getFullAdminGroups)
-
-mCore.getAdminGroupTable = function()
-    return Config.AdminGroups
-end
-
 mCore.getXPlayer = function(source)
     local source = source
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -651,4 +583,64 @@ function mCoreLoadVIP()
             end)
         end)
     end)
+end
+
+-- 1.6.4 - NOT DOCUMENTED
+
+RegisterNetEvent("mCore:loadAdminSystem", function()
+    local invoke = GetInvokingResource()
+    if not invoke == "mate-admin" then
+        mCore.error(("^1EXPLOIT^0 %s(%s) Tried to load ADMIN stuff"):format(
+            GetPlayerName(source), source))
+        mCore.sendMessage(("^1EXPLOIT^0 %s(%s) Tried to load ADMIN stuff"):format(
+            GetPlayerName(source), source), mCore["webhooks"]["exploit"], "mCore")
+        return
+    end
+    mCoreLoadAdmin()
+end)
+
+function mCoreLoadAdmin()
+    if not GetResourceState("mate-admin") == "started" then
+        return mCore.error("[ ^4mCore ^0] Cannot load `mate-admin` releated stuff! [mate-admin] is not running.")
+    end
+
+    if GetResourceState("mate-admin") then
+        local s, r = pcall(function()
+            function isAdmin(playerId)
+                return exports["mate-admin"]:isAdmin(playerId, false)
+            end
+
+            mCore.isAdmin = (function(playerId, useNotification)
+                return exports["mate-admin"]:isAdmin(playerId, useNotification)
+            end)
+
+            mCore.getAdminGroupTable = function()
+                return exports["mate-admin"]:getAdminGroupTable()
+            end
+
+            mCore.getAdminLevel = (function(playerId)
+                local xPlayer = mCore.getXPlayer(playerId)
+                local g = xPlayer.getGroup()
+
+                return exports["mate-admin"]:getAdminLevel(g)
+            end)
+
+            mCore.getAdminGroups = (function()
+                return exports["mate-admin"]:getAdminGroups()
+            end)
+
+            mCore.getFullAdminGroups = (function()
+                return exports["mate-exports"]:getFullAdminGroups()
+            end)
+
+            mCore.getAdminGroupTable = (function()
+                return exports["mate-exports"]:getAdminGroupTable()
+            end)
+        end)
+
+        if not s then mCore.debug.error(r) end
+        if s then
+            mCore.log(("Successfully loaded ^7`^6mate-admin^7`"))
+        end
+    end
 end
