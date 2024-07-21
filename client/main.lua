@@ -227,7 +227,7 @@ mCore.unloadPtfxDict = (function(dict)
 end)
 
 mCore.makeProp = (function(data, freeze, synced)
-     Functions.loadModel(data.prop)
+     mCore.loadModel(data.prop)
      local prop = CreateObject(data.prop, data.coords.x, data.coords.y, data.coords.z - 1.03, synced or false, false,
           false)
      SetEntityHeading(prop, data.coords.w + 180.0)
@@ -267,7 +267,7 @@ mCore.makeBlip = (function(data)
 end)
 
 mCore.makePed = (function(model, coords, freeze, collision, scenario, anim)
-     Functions.loadModel(model)
+     mCore.loadModel(model)
      local ped = CreatePed(0, model, coords.x, coords.y, coords.z - 1.03, coords.w, false, true)
      SetEntityInvincible(ped, true)
      SetBlockingOfNonTemporaryEvents(ped, true)
@@ -279,7 +279,7 @@ mCore.makePed = (function(model, coords, freeze, collision, scenario, anim)
           TaskStartScenarioInPlace(ped, scenario, 0, true)
      end
      if anim then
-          Functions.loadAnimDict(anim[1])
+          mCore.loadAnimDict(anim[1])
           TaskPlayAnim(ped, anim[1], anim[2], 1.0, 1.0, -1, 1, 0.2, false, false, false)
      end
 
@@ -336,6 +336,10 @@ mCore.lookEnt = (function(entity)
      end
 end)
 
+mCore.toggleItem = (function(give, item, amount)
+     TriggerServerEvent("mCore:server:toggleItem", give, item, amount)
+end)
+
 mCore.lockInv = (function(toggle)
      FreezeEntityPosition(PlayerPedId(), toggle)
      LocalPlayer.state:set("inv_busy", toggle, true)
@@ -352,13 +356,13 @@ mCore.progressBar = (function(data)
                    label = data.label,
                    useWhileDead = data.dead or false,
                    canCancel = data.cancel or true,
-                   anim = { dict = data.dict, clip = data.anim, flag = (data.flag == 8 and 32 or data.flag) or nil, scenario = data.task }, disable = { combat = true }
+                   anim = { dict = tostring(data.dict), clip = tostring(data.anim), flag = (data.flag == 8 and 32 or data.flag) or nil, scenario = data.task }, disable = { combat = true }
               }) then
                result = true
-               Functions.lockInv(false)
+               mCore.lockInv(false)
           else
                result = false
-               Functions.lockInv(false)
+               mCore.lockInv(false)
           end
 
           while result == nil do Wait(10) end
@@ -369,7 +373,7 @@ end)
 
 mCore.HasItem = (function(items, amount)
      if GetResourceState("ox_inventory") ~= "missing" then
-          local count = exports["ox_inventory"]:Search("count", items)
+          local count  = exports["ox_inventory"]:Search("count", items)
           local amount = (amount or 1)
           if count >= amount then
                mCore.debug.log(("^3HasItem^7: ^5FOUND^7 ^3     %s ^7/^3 %s %s^7"):format(count, amount, items))
@@ -395,3 +399,113 @@ mCore.pairsByKeys = (function(t)
 end)
 
 
+-- 1.6.4 -- Not Documented
+
+local particleHandle, isPlaying = nil, false
+mCore.RemoveExistingParticleEffect = (function()
+     if DoesParticleFxLoopedExist(particleHandle) then
+          RemoveParticleFx(particleHandle, false)
+     end
+end)
+
+
+mCore.PlayParticleAtCoord = (function(data)
+     if not data.dic or not data.fx then
+          mCore.debug.log("^7[^3FX^7]: ^2Cannot draw particle effects! no dic or fx")
+          return
+     end
+
+     mCore.RemoveExistingParticleEffect()
+     mCore.loadPtfxDict(data.dic)
+
+     UseParticleFxAsset(data.dic)
+     local playing = true
+
+     if not DoesParticleFxLoopedExist(particleHandle) then
+          particleHandle = StartParticleFxLoopedAtCoord(data.fx, data.coord.x, data.coord.y, data.coord.z, 0.0, 0.0, 0.0,
+               data.scale, false, false, false, false)
+     else
+          print("asd")
+          while playing do
+               particleHandle = StartParticleFxNonLoopedAtCoord(data.fx, data.coord.x, data.coord.y,
+                    data.coord.z,
+                    0.0, 0.0, 0.0,
+                    data.scale, false, false, false)
+               Wait(data.wait or 160)
+          end
+     end
+
+     SetTimeout(data.timeout or 1500, function()
+          mCore.RemoveExistingParticleEffect()
+          playing = false
+     end)
+end)
+
+RegisterNetEvent("mCore:client:PlayNetFx", (function(data)
+     mCore.PlayNetFx(data)
+end))
+
+mCore.PlayNetFx = (function(data)
+     if not isPlaying then isPlaying = true else return mCore.debug.log("Already playing an effect") end
+     if not data.dic or not data.fx then
+          mCore.debug.log("^7[^3FX^7]: ^2Cannot draw particle effects! no dic or fx")
+          return
+     end
+
+     mCore.RemoveExistingParticleEffect()
+     mCore.loadPtfxDict(data.dic)
+
+     UseParticleFxAsset(data.dic)
+
+     local ped
+
+     if not data.entity then
+          ped = GetPlayerPed(GetPlayerFromServerId(data.pid))
+     else
+          ped = data.entity
+     end
+
+     if not DoesEntityExist(ped) then return mCore.debug.log("Ped dose not exists or not found") end
+     if not data.offset then
+          data.offset = vec3(0.0, 0.0, 0.0)
+     end
+     if not data.rot then
+          data.rot = vec3(0.0, 0.0, 0.0)
+     end
+
+     if not DoesParticleFxLoopedExist(particleHandle) then
+          particleHandle = StartNetworkedParticleFxLoopedOnEntity(data.fx, ped,
+               data.offset.x or 0.0, data.offset.y or 0.0, data.offset.z or 0.0, data.rot.x or 0.0, data.rot.y or 0.0,
+               data.rot.z or 0.0, data.scale or 1.0, false,
+               false, false)
+
+          if data.color then
+               SetParticleFxLoopedColour(particleHandle, data.color.x, data.color.y, data.color.z, false)
+          end
+
+          SetTimeout(data.timeout or 1500, function()
+               mCore.RemoveExistingParticleEffect()
+               isPlaying = false
+          end)
+     end
+end)
+
+mCore.PlayParticleEffect = (function(data)
+     if isPlaying then return mCore.debug.log("Playing an effect returning! ") end
+
+     local myped = PlayerPedId()
+
+     mCore.RemoveExistingParticleEffect()
+     mCore.loadPtfxDict(data.dic)
+
+     UseParticleFxAsset(data.dic)
+
+     if not DoesParticleFxLoopedExist(particleHandle) then
+          particleHandle = StartParticleFxLoopedOnEntity(data.fx, myped,
+               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, data.scale, false, false, false)
+
+          SetTimeout(data.timeout or 1500, function()
+               mCore.RemoveExistingParticleEffect()
+          end)
+     end
+end)
