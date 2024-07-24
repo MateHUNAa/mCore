@@ -587,6 +587,35 @@ end
 
 -- 1.6.4 - NOT DOCUMENTED
 
+RegisterNetEvent("mCore:server:net:addFxToEntity", (function(data)
+    TriggerClientEvent("mCore:client:PlayNetFx", -1, data)
+end))
+
+RegisterNetEvent("mCore:server:net:addFxToCoordLooped", (function(data)
+    TriggerClientEvent("mCore:client:PlayNetFxAtCoordLooped", -1, data)
+end))
+
+RegisterNetEvent("mCore:server:toggleItem", (function(give, item, amount)
+    local src      = newsrc or source
+    local xPlayer  = mCore.getXPlayer(src)
+    local reamount = (amount or 1)
+
+    if give == 0 or give == false then
+        if hasItem(xPlayer.source, item, amount or 1) then
+            if exports["ox_inventory"]:RemoveItem(src, item, reamount) then
+                mCore.debug.log(("^4Removeing ^2Player^7(^2%s^7) ^2%s^7(^6" .. (amount or "1") .. "^7)"):format(src,
+                    item))
+            end
+        else
+            dupeWarn(xPlayer.source, item)
+        end
+    else
+        if exports["ox_inventory"]:AddItem(xPlayer.source, item, reamount) then
+            mCore.debug.log(("^4Giveing ^2Player^7(^2%s^7) ^2%s^7(^6" .. (amount or "1") .. "^7)"):format(src, item))
+        end
+    end
+end))
+
 RegisterNetEvent("mCore:loadAdminSystem", function()
     local invoke = GetInvokingResource()
     if not invoke == "mate-admin" then
@@ -604,7 +633,7 @@ function mCoreLoadAdmin()
         return mCore.error("[ ^4mCore ^0] Cannot load `mate-admin` releated stuff! [mate-admin] is not running.")
     end
 
-    if GetResourceState("mate-admin") then
+    if GetResourceState("mate-admin") ~= "missing" then
         local s, r = pcall(function()
             function isAdmin(playerId)
                 return exports["mate-admin"]:isAdmin(playerId, false)
@@ -643,4 +672,38 @@ function mCoreLoadAdmin()
             mCore.log(("Successfully loaded ^7`^6mate-admin^7`"))
         end
     end
+end
+
+function hasItem(src, items, amount)
+    local amount, count = amount or 1, 0
+    local xPlayer = mCore.getXPlayer(src)
+
+    mCore.debug.log(("^3HasItem^7: ^2Checking if player has required item^7 ^3%s^7"):format(tostring(items)))
+
+    for _, itemData in pairs(exports["ox_inventory"]:GetInventoryItems(xPlayer.source)) do
+        if itemData and (itemData.name == items) then
+            mCore.debug.log(("^3HasItem^7: ^2Item^7 '^3%s^7' ^2Slot^7: ^3%s^7 x(^3%s^7)"):format(tostring(items),
+                itemData.slot, itemData.count))
+            count += itemData.count
+        end
+    end
+    if count >= amount then
+        mCore.debug.log(("^3HasItem^7: ^2Items ^5FOUND^7 x^3%s^7"):format(count))
+        return true
+    end
+    mCore.debug.log(("^3HasItem^7: ^2Items ^1NOT FOUND^7"))
+    return false
+end
+
+function dupeWarn(src, item)
+    local xPlayer = mCore.getXPlayer(src)
+    print(("^5DupeWarn: ^1%s^7(^1%s^7) ^2 Tried to remove item ^7(^3%s^7)^2 but it wasn't there^7"):format(
+        GetPlayerName(src), src, item))
+
+    if not mCore.isDebug() then
+        DropPlayer(src, "^1Kicked for attempting to duplicate items")
+    end
+    print(("^5DupeWarn: ^1%s^7(^1%s^7) ^2Dropped from server for item duplicating ^7"):format(GetPlayerName(src), src))
+    mCore.sendMessage(("%s(%s) Dropped from server for item duplicating"):format(GetPlayerName(src), src),
+        mCore.RequestWebhook("exploit"), "mCore - DupeWarn")
 end
