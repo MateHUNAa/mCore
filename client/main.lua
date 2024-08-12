@@ -20,7 +20,9 @@ end)
 --
 -- VAR's
 --
-local Props, Blips, Peds = {}, {}, {}
+local Props, Blips, Peds = {}, {}, {} -- Cacheing problems shall remove or upgrade
+          -- Cache: invoke[#Props] = newProp; invokeList = newProp.invoker 
+          -- CleanUP: Event -> onResourceStop[newProp.invoker] : Remove cached !
 local inv = exports.ox_inventory
 
 --
