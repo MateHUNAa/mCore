@@ -38,7 +38,8 @@ Config.NotifyTypes         = {
 }
 
 Config.Icons               = { -- For custom marker you can adjust the .png name here! only the file name needed dont add .extension after file name
-     "rime"
+     "rime",
+     "loot"
 }
 
 
