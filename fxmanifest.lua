@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-version '1.6.3'
+version '1.6.4'
 author 'MateHUN'
 description 'MateHUN <-> Exports'
 
@@ -44,4 +44,11 @@ escrow_ignore {
 
 files {
     'icons/*.png'
+}
+
+
+
+files {
+	'stream/*',
+	'assets/*'
 }

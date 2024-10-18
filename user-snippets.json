@@ -3,7 +3,7 @@
 		"scope": "lua",
 		"prefix": "mCore.getSharedObj",
 		"body": [
-			"mCore = exports[\"mateExports\"]:getSharedObj()"
+			"mCore = exports[\"mCore\"]:getSharedObj()"
 		],
 		"description": "Get shared object using mCore"
 	},
@@ -26,7 +26,7 @@
 		"scope": "lua",
 		"prefix": "mCore.Draw3DText",
 		"body": [
-			"mCore.Draw3DText($x, $y, $z, $scaleFactor, \"$text\")"
+			"mCore.Draw3DText($x, $y, $z, \"$text\", nil,nil,nil, useScale, font)"
 		]
 	},
 	"CLIENT: mCore.draw3DTextiWthRainbowFlow": {
@@ -67,6 +67,14 @@
 			"mCore.debug.error"
 		],
 		"body": "mCore.debug.error(\"$message\")"
+	},
+	"SHARED: mCore.getServerName": {
+		"scope": "lua",
+		"prefix": [
+			"mCore.getServerName"
+		],
+		"description": "Return server name",
+		"body": "mCore.getServerName()",
 	},
 	// Version Check
 	"SERVER: mCore.versionCheck": {
@@ -293,7 +301,7 @@
 		"body": [
 			"mCore.makeProp({",
 			"     prop   = \"prop_barier_conc_01b\",",
-			"     coords = vec3(0.0, 0.0, 0.0),",
+			"     coords = vec4(0.0, 0.0, 0.0, 0.0),",
 			"},${1|true,false|}--[[freezed]], ${2|false,true|}--[[synced]])",
 		]
 	},
@@ -364,6 +372,13 @@
 			"mCore.HasItem(${1|\"itemName\"|}, ${2|1,NumberOfItemNeeded|})",
 		]
 	},
+	"CLIENT: mCore.toggleItem": {
+		"scope": "lua",
+		"prefix": "mCore.toggleItem",
+		"body": [
+			"mCore.toggleItem(${1|true,false,give|}, ${2|\"item\"|}, ${3|1,amount|})",
+		]
+	},
 	"CLIENT: mCore.pairsByKeys": {
 		"scope": "lua",
 		"prefix": "mCore.pairsByKeys",
@@ -389,4 +404,50 @@
 			"end",
 		]
 	},
+	// 1.6.4 -- Not Ducumented
+	"SERVER:NET:DATA mCore.PlayNetFx": {
+		"description": "Networked particle effect",
+		"scope": "lua",
+		"prefix": "mCore:data:PlayNetFx",
+		"body": [
+			"{",
+			" coord   = targetCoords,",
+			"dic     = \"scr_rcbarry1\",",
+			"fx      = \"scr_alien_charging\",",
+			"scale   = 1.2,",
+			"timeout = 1000,",
+			"color   = vec3(1.0, 1.0, 1.0),",
+			"offset  = vec3(0.0, 0.0, 0.0),",
+			"pid     = xTarget.source -- TARGET ENTITY ID",
+			"}",
+		]
+	},
+	"SERVER:NET mCore.PlayNetFx": {
+		"description": "Fire Networked Particle ",
+		"scope": "lua",
+		"prefix": "mCore.PlayNetFx",
+		"body": [
+			"TriggerServerEvent(\"mCore:server:net:addFxToEntity\", data)",
+		]
+	},
+	"Wait for Player": {
+		"description": "Wait for ESX player load",
+		"scope": "lua",
+		"prefix": "isload",
+		"body": [
+			"while not ESX.IsPlayerLoaded() do Wait(1000) end",
+		]
+	},
+	"onResourceStop": {
+		"description": "Generate a template for `OnResourceStop` event",
+		"scope": "lua",
+		"prefix": "onresourcestop",
+		"body": [
+			"AddEventHandler(\"onResourceStop\", (function(res)",
+			" if GetCurrentResourceName() ~= res then return end",
+			"\n",
+			"end))"
+		]
+	},
+	
 }

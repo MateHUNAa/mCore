@@ -20,41 +20,67 @@ end)
 --
 -- VAR's
 --
-local Props, Blips, Peds = {}, {}, {} -- Cacheing problems shall remove or upgrade
-          -- Cache: invoke[#Props] = newProp; invokeList = newProp.invoker 
-          -- CleanUP: Event -> onResourceStop[newProp.invoker] : Remove cached !
+local Props, Blips, Peds = {}, {}, {}
 local inv = exports.ox_inventory
 
 --
 -- Function's
 --
 
-mCore.Draw3DText = (function(x, y, z, scl_factor, text)
-     local onScreen, _x, _y = World3dToScreen2d(x, y, z)
-     local p = GetGameplayCamCoords()
-     local distance = GetDistanceBetweenCoords(p.x, p.y, p.z, x, y, z, 1)
-     local scale = (1 / distance) * 2
-     local fov = (1 / GetGameplayCamFov()) * 100
-     local scale = scale * fov * scl_factor
-     if onScreen then
-          SetTextScale(0.0, scale)
-          SetTextFont(6)
-          SetTextProportional(1)
-          SetTextColour(255, 255, 255, 255)
-          SetTextDropshadow(0, 0, 0, 0, 255)
-          SetTextEdge(2, 0, 0, 0, 150)
-          SetTextDropShadow()
-          SetTextOutline()
-          SetTextEntry("STRING")
-          SetTextCentre(1)
-          AddTextComponentString(text)
-          DrawText(_x, _y)
+---Draw3DText
+---@param x number
+---@param y number
+---@param z number
+---@param text string
+---@param r integer | nil
+---@param g integer | nil
+---@param b integer | nil
+---@param scales boolean
+---@param font string | number
+mCore.Draw3DText = (function(x, y, z, text, r, g, b, scales, font)
+     if not x or not y or not z or not text then return end
+     SetDrawOrigin(x, y, z)
+
+     local scale = .80
+     if scales then
+          local camCoords = GetFinalRenderedCamCoord()
+          local dist = #(vector3(x, y, z) - camCoords)
+
+          scale = scale * (dist / 5);
      end
+
+     local useFont = 4
+
+
+     if font then
+          if type(font) == "string" then
+               useFont = mCore.getFont(font)
+          else
+               useFont = font
+          end
+     end
+
+     SetTextScale(0.35 * scale, 0.35 * scale)
+     SetTextFont(useFont or 4)
+     SetTextProportional(true)
+     SetTextDropshadow(0, 0, 0, 0, 255)
+     SetTextEdge(2, 0, 0, 0, 150)
+     SetTextDropShadow()
+
+     SetTextWrap(0.0, 1.0)
+     SetTextColour(r or 255, g or 255, b or 255, 2555)
+     SetTextOutline()
+     SetTextCentre(true)
+     BeginTextCommandDisplayText("STRING")
+     AddTextComponentString(text)
+     EndTextCommandDisplayText(0.0, 0.0)
+
+     ClearDrawOrigin()
 end)
 
 Citizen.CreateThread(function()
      for i = 1, #Config.Icons do
-          mCore.log(("^2 Createing texture ^7(^6%s^7) ^7"):format(Config.Icons[i]))
+          -- mCore.log(("^2 Createing texture ^7(^6%s^7) ^7"):format(Config.Icons[i]))
           local txd = CreateRuntimeTxd(Config.Icons[i])
 
           if not HasStreamedTextureDictLoaded(Config.Icons[i]) then
@@ -84,7 +110,6 @@ end)
 mCore.DrawCustomIcon = function(coords, icon)
      if not icon or type(icon) ~= "string" then return end
      if not coords or type(coords) ~= "vector3" then return print(type(coords)) end
-     print("Drawing marker at coords:", coords, "with icon:", icon)
 
      DrawMarker(9, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, 0.5, 0.5, 0.5, 255, 255, 255, 255,
           false, true, 2, false, icon, icon, false)
@@ -300,7 +325,7 @@ mCore.makeBlip = (function(data)
      BeginTextCommandSetBlipName('STRING')
      AddTextComponentString(tostring(data.name))
      EndTextCommandSetBlipName(Blips[#Blips])
-     mCore.debug.log("^6Blip ^2created for location^7: '^6" .. data.name .. "^7'")
+     -- mCore.debug.log("^6Blip ^2created for location^7: '^6" .. data.name .. "^7'")
      return Blips[#Blips]
 end)
 mCore.removeBlip = (function(b)
@@ -392,6 +417,7 @@ end
 mCore.lockInv = (function(toggle)
      FreezeEntityPosition(PlayerPedId(), toggle)
      LocalPlayer.state:set("inv_busy", toggle, true)
+     LocalPlayer.state:set("invBusy", toggle, true)
      TriggerEvent("inventory:client:busy:status", toggle)
      TriggerEvent("canUseInventoryAndHotbar:toggle", toggle)
 end)
@@ -771,3 +797,30 @@ AddEventHandler("onResourceStop", (function(r)
           RemoveBlip(Blips[i])
      end
 end))
+
+
+local loadedFonts = {}
+
+local validFonts = {
+     RobotoRegular = true,
+     BebasNeueOtf = true,
+     FontAwesome = true,
+}
+
+function GetFont(name)
+     if name == "default" then
+          return 0
+     end
+
+     assert(validFonts[name], ("font is invalid! (%s)"):format(name))
+
+     if not loadedFonts[name] then
+          RegisterFontFile(name)
+          loadedFonts[name] = RegisterFontId(name)
+     end
+     return loadedFonts[name]
+end
+
+exports("getFont", GetFont)
+
+mCore.getFont = GetFont

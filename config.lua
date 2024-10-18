@@ -22,11 +22,12 @@ Config.weaponDamage        = {
 }
 
 Config.Webhooks            = {
-     ['money']   = "",    -- Each is optional please use false if not using !
-     ["error"]   = "",    -- Each is optional please use false if not using !
-     ["exploit"] = "",    -- Each is optional please use false if not using !
-     ["harvest"] = "",    -- Each is optional please use false if not using !
-     ["example"] = false, -- Each is optional please use false if not using !
+     ['money']        = "",
+     ["error"]        = "",
+     ["exploit"]      = "",
+     ["jobchange"]    = "",
+     ["inventorylog"] = "",
+     ["resource"]     = "",
 }
 
 Config.NotifyTypes         = {
@@ -37,13 +38,7 @@ Config.NotifyTypes         = {
      ["ems"]     = true,
 }
 
-Config.Icons               = { -- For custom marker you can adjust the .png name here! only the file name needed dont add .extension after file name
-     "rime",
-     "loot"
-}
-
-
-Config.Notify  = (function(playerId, title, message, type, dur)
+Config.Notify              = (function(playerId, title, message, type, dur)
      if not Config.NotifyTypes[type] then
           for t in pairs(Config.NotifyTypes) do
                if not type == t then type = Config.NotifyTypes[1] end
@@ -56,7 +51,7 @@ Config.Notify  = (function(playerId, title, message, type, dur)
      TriggerClientEvent("codem-notification:Create", playerId, message, type, title, dur)
 end)
 
-Config.CNotify = (function(title, message, type, dur)
+Config.CNotify             = (function(title, message, type, dur)
      if not Config.NotifyTypes[type] then
           for t in pairs(Config.NotifyTypes) do
                if not type == t then type = Config.NotifyTypes[1] end
@@ -69,6 +64,11 @@ Config.CNotify = (function(title, message, type, dur)
      TriggerEvent("codem-notification:Create", message, type, title, dur)
 end)
 
+
+Config.Icons                    = { -- For custom marker you can adjust the .png name here! only the file name needed dont add .extension after file name
+     "mhScripts",
+
+}
 
 --
 -- Do not touch
