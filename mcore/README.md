@@ -23,12 +23,14 @@ description: >-
 You can easily customize the behavior of `mCore` using convar settings. Here is the example:
 
 ```properties
-setr matehun:global_debug 1
-setr matehun:disableAscii 1
+setr mCore:global_debug 1
+setr mCore:disableAscii 1
+setr mCore:serverName "Server Name"
 ```
 
-* `matehun:global_debug 1` - Enables global debugging mode.
-* `matehun:disableAscii 1` - Disables ASCII arts in entire mCore.
+* `mCore:global_debug 1` - Enables global debugging mode.
+* `mCore:disableAscii 1` - Disables ASCII arts in entire mCore.
+* mCore:serverName "Server Name" - Set Servername in resources.
 
 ### Github
 
