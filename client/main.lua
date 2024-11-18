@@ -368,7 +368,7 @@ mCore.lookAtMe = (function(entity)
      if DoesEntityExist(entity) then
           if not IsPedHeadingTowardsPosition(entity, GetEntityCoords(PlayerPedId()), 30.0) then
                TaskTurnPedToFaceCoord(entity, GetEntityCoords(PlayerPedId()), 1500)
-               mCore.debug.log("^2Turning Player to^7: '^6" .. entity .. "^7'")
+               mCore.debug.log("^2Turning Ped to^7: '^6" .. "Player" .. "^7'")
                Wait(1500)
           end
      end
@@ -464,4 +464,60 @@ end)
 
 -- 1.6.4 -- Not Documented
 -- TODO: Rework most of the start/play fx's
--- TODO: Use class
+
+
+function CreatePlayerModePtfxLoop(tgtPedId, isSelf)
+     CreateThread(function()
+          if tgtPedId <= 0 or tgtPedId == nil then return end
+          RequestNamedPtfxAsset(PTFX_DICT)
+
+          -- Wait until it's done loading.
+          while not HasNamedPtfxAssetLoaded(PTFX_DICT) do
+               Wait(5)
+          end
+
+          local particleTbl = {}
+          for i = 0, LOOP_AMOUNT do
+               UseParticleFxAsset(PTFX_DICT)
+               local partiResult = StartParticleFxLoopedOnEntity(
+                    PTFX_ASSET,
+                    tgtPedId,
+                    0.0, 0.0, 0.0,      -- offset
+                    0.0, 0.0, 0.0,      -- rot
+                    PTFX_SCALE,
+                    false, false, false -- axis
+               )
+               particleTbl[#particleTbl + 1] = partiResult
+               Wait(LOOP_DELAY)
+          end
+
+          Wait(PTFX_DURATION)
+          for _, parti in ipairs(particleTbl) do
+               StopParticleFxLooped(parti, true)
+          end
+          RemoveNamedPtfxAsset(PTFX_DICT)
+     end)
+end
+
+RegisterCommand('ptfx', function()
+     CreateThread(function()
+          Wait(500)
+          while true do
+               local players = GetActivePlayers()
+               local nearbyPlayers = {}
+               for _, player in ipairs(players) do
+                    nearbyPlayers[#nearbyPlayers + 1] = GetPlayerServerId(player)
+               end
+
+               TriggerServerEvent('mcore:playPtfx', nearbyPlayers)
+               Wait(5000)
+          end
+     end)
+end)
+
+RegisterNetEvent('mCore:showPtfx', function(tgtSrc)
+     mCore.debug.log('Syncing particle effect for target netId: ' .. tgtSrc)
+     local tgtPlayer = GetPlayerFromServerId(tgtSrc)
+     if tgtPlayer == -1 then return end
+     CreatePlayerModePtfxLoop(GetPlayerPed(tgtPlayer), false)
+end)

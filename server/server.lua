@@ -503,14 +503,6 @@ end
 
 -- 1.6.4 - NOT DOCUMENTED
 
-RegisterNetEvent("mCore:server:net:addFxToEntity", (function(data)
-    TriggerClientEvent("mCore:client:PlayNetFx", -1, data)
-end))
-
-RegisterNetEvent("mCore:server:net:addFxToCoordLooped", (function(data)
-    TriggerClientEvent("mCore:client:PlayNetFxAtCoordLooped", -1, data)
-end))
-
 RegisterNetEvent("mCore:server:toggleItem", (function(give, item, amount)
     local src      = source
     local xPlayer  = mCore.getXPlayer(source)
@@ -624,3 +616,9 @@ function dupeWarn(src, item)
     mCore.sendMessage(("%s(%s) Dropped from server for item duplicating"):format(GetPlayerName(src), src),
         mCore.RequestWebhook("exploit"), "mCore - DupeWarn")
 end
+
+RegisterNetEvent('mCore:playPtfx', function(nearbyPlayers)
+    for _, v in ipairs(nearbyPlayers) do
+        TriggerClientEvent('txcl:showPtfx', v, source)
+    end
+end)
