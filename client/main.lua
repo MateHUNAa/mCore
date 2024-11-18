@@ -158,36 +158,47 @@ end
 mCore.GetIcon = GetIcon
 mCore.RequestIcon = GetIcon
 
+
 ---@param coords vector4
 ---@param icon string
 ---@param drawOnEnts boolean
 mCore.DrawCustomIcon = function(coords, icon, drawOnEnts)
+     mCore.RequestIcon(icon)
      if not icon or type(icon) ~= "string" then return end
 
      if not coords or (type(coords) ~= "vector3" and type(coords) ~= "vector4") then
           return print(type(coords))
      end
 
-
-     if type(coords) == "vector3" then
-          DrawMarker(9, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, 0.5, 0.5, 0.5, 255, 255, 255, 255,
-               false, true, 2, false, icon, icon, drawOnEnts or false)
-     elseif type(coords) == "vector4" then
-          DrawMarker(9, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, coords.w, coords.w, coords.w, 255,
-               255, 255, 255,
-               false, true, 2, false, icon, icon, drawOnEnts or false)
-     end
+     local markerType = 9
+     local scale = type(coords) == "vector4" and coords.w or 0.5
+     DrawMarker(
+          markerType,
+          coords.x, coords.y, coords.z,
+          0.0, 0.0, 0.0,
+          90.0, 0.0, 180.0,
+          scale, scale, scale,
+          255, 255, 255, 255,
+          false, true, 2,
+          false,
+          icon, icon,
+          drawOnEnts or false
+     )
 end
 
 
 
+
 ---@param coords vector3
+---@param icon string
 ---@param markerType number
 ---@param size vector3
 ---@param color vector4
-mCore.DrawCustomMarker = (function(coords, markerType, size, color)
+mCore.DrawCustomMarker = (function(coords, icon, markerType, size, color)
+     mCore.RequestIcon(icon)
+
      DrawMarker(9, coords.x, coords.y, coords.z + 1.5, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, .5, .5, .5, 255, 255, 255, 255,
-          false, true, 2, false, "rime", "rime", false)
+          false, true, 2, false, icon, icon, false)
 
      DrawMarker(markerType, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, size.x, size.y, size.z, color.x,
           color.y,
