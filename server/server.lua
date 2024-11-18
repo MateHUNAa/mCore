@@ -152,16 +152,6 @@ mCore.mPlayer = function(source)
     return mPlayer
 end
 
-
-if currentFileName ~= 'mCore' then
-    for i = 1, 10 do
-        print("You cannot use this resource server will shutdown in 5 sec")
-    end
-
-    os.exit(5)
-end
-
-
 local disableAscii = GetConvar("matehun:disableAscii", "0")
 local debug        = GetConvar("matehun:global_debug", "0") ~= '0'
 local serverName   = GetConvar("mCore:serverName", "mCore")
