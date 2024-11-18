@@ -29,6 +29,11 @@
 			"mCore.Draw3DText($x, $y, $z, \"$text\", nil,nil,nil, useScale, font)"
 		]
 	},
+	"CLIENT: mCore.DrawCustomIcon": {
+		"scope": "lua",
+		"prefix": "mCore.DrawCustomIcon",
+		"body": "mCore.DrawCustomIcon(${1|vec4()|}, ${2|\"rime\"|}, ${3|false|})"
+	},
 	"CLIENT: mCore.draw3DTextiWthRainbowFlow": {
 		"scope": "lua",
 		"prefix": "mCore.draw3DTextiWthRainbowFlow",
@@ -449,5 +454,39 @@
 			"end))"
 		]
 	},
-	
+	"RegisterNetEvent with Parent Folder Name": {
+		"prefix": "registernetevent",
+		"body": [
+			"RegisterNetEvent('${TM_DIRECTORY/(.*)[\\\\\\/](.*)[\\\\\\/](.*)/$2/}:${1:eventName}', function()",
+			"    $0",
+			"end)"
+		],
+		"description": "RegisterNetEvent with the parent folder name (server or client) as the event prefix"
+	},
+	"TriggerServerEvent with Parent Folder Name": {
+		"prefix": "triggerserverevent",
+		"body": [
+			"TriggerServerEvent('${TM_DIRECTORY/(.*)[\\\\\\/](.*)[\\\\\\/](.*)/$2/}:${1:eventName}', {})"
+		],
+		"description": "TriggerServerEvent with the parent folder name (server or client) as the event prefix"
+	},
+	"TriggerClientEvent with Parent Folder Name": {
+		"prefix": "triggerclientevent",
+		"body": [
+			"TriggerClientEvent('${TM_DIRECTORY/(.*)[\\\\\\/](.*)[\\\\\\/](.*)/$2/}:${1:eventName}', source)"
+		],
+		"description": "TriggerClientEvent with the parent folder name (server or client) as the event prefix"
+	},
+	"CLIENT: FadeTP": {
+		"prefix": "mCore.FadeTP",
+		"body": "mCore.FadeTP(${1|vec3()|}, ${2|500|})"
+	},
+	"RegisterCommand": {
+		"prefix": "registercommand",
+		"body": [
+			"RegisterCommand(\"${1|stringName|}\", (function(src, args, raw)\n",
+			"${2|--body|}",
+			"end))"
+		]
+	}
 }
