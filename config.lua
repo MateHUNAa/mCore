@@ -6,7 +6,7 @@ Config.Webhook             = "" -- Global Webhook !IMPORTANT!
 
 Config.UseCustomDeathEvent = true
 Config.onServerStart       = {
-
+     ReturnImpounded = true
 }
 Config.JoinServer          = {
      Enable           = true,
@@ -27,9 +27,6 @@ Config.Webhooks            = {
      ['money']        = "",
      ["error"]        = "",
      ["exploit"]      = "",
-     ["jobchange"]    = "",
-     ["inventorylog"] = "",
-     ["resource"]     = "",
 }
 
 Config.NotifyTypes         = {
