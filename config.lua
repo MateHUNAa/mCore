@@ -65,9 +65,8 @@ Config.CNotify             = (function(title, message, type, dur)
 end)
 
 
-Config.Icons                    = { -- For custom marker you can adjust the .png name here! only the file name needed dont add .extension after file name
+Config.Icons                    = {
      "mhScripts",
-
 }
 
 --

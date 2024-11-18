@@ -77,9 +77,87 @@ mCore.Draw3DText = (function(x, y, z, text, r, g, b, scales, font)
      ClearDrawOrigin()
 end)
 
+
+
+local loadedFonts = {}
+
+local validFonts = {
+     RobotoRegular = true,
+     BebasNeueOtf = true,
+     FontAwesome = true,
+}
+
+function GetFont(name)
+     if name == "default" then
+          return 0
+     end
+
+     assert(validFonts[name], ("font is invalid! (%s)"):format(name))
+
+     if not loadedFonts[name] then
+          RegisterFontFile(name)
+          loadedFonts[name] = RegisterFontId(name)
+     end
+     return loadedFonts[name]
+end
+
+exports("getFont", GetFont)
+
+mCore.getFont = GetFont
+local loadedIcons = {}
+
+function GetIcon(name)
+     assert(type(Config.Icons) == "table" and #Config.Icons > 0, "Config.Icons must be a non-empty table.")
+
+     if not loadedIcons[name] then
+          local iconIndex = nil
+          for i = 1, #Config.Icons do
+               if Config.Icons[i] == name then
+                    iconIndex = i
+                    break
+               end
+          end
+
+          if not iconIndex then
+               return print(("^7[^3mCore^7]: ^1Err:^7 Icon name ^6'%s'^7 not found in Config.Icons."):format(name))
+          end
+
+          local iconPath = Config.Icons[iconIndex]
+
+          if not HasStreamedTextureDictLoaded(iconPath) then
+               RequestStreamedTextureDict(iconPath, true)
+               while not HasStreamedTextureDictLoaded(iconPath) do
+                    Citizen.Wait(0)
+               end
+          end
+
+          local txd = CreateRuntimeTexture(iconPath)
+          if not txd then
+               return print(("^7[^3mCore^7]: ^1Err:^7 Failed to create runtime texture for ^6'%s'^7."):format(iconPath))
+          end
+
+          local textureLoaded = CreateRuntimeTextureFromImage(txd, iconPath, string.format("icons/%s.png", iconPath))
+          if not textureLoaded then
+               return print(("^7[^3mCore^7]: ^1Err:^7 Failed to create texture from image ^6'%s.png'^7."):format(
+               iconPath))
+          end
+
+          local textureResolution = GetTextureResolution(iconPath, iconPath)
+          if textureResolution.x == 0 and textureResolution.y == 0 then
+               return print(("^7[^3mCore^7]: ^1Err:^7 Texture resolution is invalid for ^6'%s'^7."):format(iconPath))
+          end
+
+          loadedIcons[name] = txd
+     end
+
+     return loadedIcons[name]
+end
+
+mCore.GetIcon = GetIcon
+mCore.RequestIcon = GetIcon
+
 Citizen.CreateThread(function()
      for i = 1, #Config.Icons do
-          -- mCore.log(("^2 Createing texture ^7(^6%s^7) ^7"):format(Config.Icons[i]))
           local txd = CreateRuntimeTxd(Config.Icons[i])
 
           if not HasStreamedTextureDictLoaded(Config.Icons[i]) then
@@ -478,29 +556,3 @@ end)
 -- 1.6.4 -- Not Documented
 -- TODO: Rework most of the start/play fx's
 -- TODO: Use class
-
-local loadedFonts = {}
-
-local validFonts = {
-     RobotoRegular = true,
-     BebasNeueOtf = true,
-     FontAwesome = true,
-}
-
-function GetFont(name)
-     if name == "default" then
-          return 0
-     end
-
-     assert(validFonts[name], ("font is invalid! (%s)"):format(name))
-
-     if not loadedFonts[name] then
-          RegisterFontFile(name)
-          loadedFonts[name] = RegisterFontId(name)
-     end
-     return loadedFonts[name]
-end
-
-exports("getFont", GetFont)
-
-mCore.getFont = GetFont
