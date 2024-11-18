@@ -26,6 +26,7 @@ local inv = exports.ox_inventory
 -- Function's
 --
 
+
 ---Draw3DText
 ---@param x number
 ---@param y number
@@ -76,6 +77,7 @@ mCore.Draw3DText = (function(x, y, z, text, r, g, b, scales, font)
 
      ClearDrawOrigin()
 end)
+
 
 
 
@@ -156,19 +158,36 @@ end
 mCore.GetIcon = GetIcon
 mCore.RequestIcon = GetIcon
 
-mCore.DrawCustomIcon = function(coords, icon)
+---@param coords vector4
+---@param icon string
+---@param drawOnEnts boolean
+mCore.DrawCustomIcon = function(coords, icon, drawOnEnts)
      if not icon or type(icon) ~= "string" then return end
-     if not coords or type(coords) ~= "vector3" then return print(type(coords)) end
 
-     DrawMarker(9, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, 0.5, 0.5, 0.5, 255, 255, 255, 255,
-          false, true, 2, false, icon, icon, false)
+     if not coords or (type(coords) ~= "vector3" and type(coords) ~= "vector4") then
+          return print(type(coords))
+     end
+
+
+     if type(coords) == "vector3" then
+          DrawMarker(9, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, 0.5, 0.5, 0.5, 255, 255, 255, 255,
+               false, true, 2, false, icon, icon, drawOnEnts or false)
+     elseif type(coords) == "vector4" then
+          DrawMarker(9, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, coords.w, coords.w, coords.w, 255,
+               255, 255, 255,
+               false, true, 2, false, icon, icon, drawOnEnts or false)
+     end
 end
 
 
 
+---@param coords vector3
+---@param markerType number
+---@param size vector3
+---@param color vector4
 mCore.DrawCustomMarker = (function(coords, markerType, size, color)
      DrawMarker(9, coords.x, coords.y, coords.z + 1.5, 0.0, 0.0, 0.0, 90.0, 0.0, 180.0, .5, .5, .5, 255, 255, 255, 255,
-          false, true, 2, false, "rimeMarker", Config.Icons[1], false)
+          false, true, 2, false, "rime", "rime", false)
 
      DrawMarker(markerType, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, size.x, size.y, size.z, color.x,
           color.y,
