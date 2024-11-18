@@ -19,11 +19,14 @@ function getSharedObj()
     return mCore
 end
 
+exports("getSharedObj", getSharedObj)
 RegisterNetEvent("mCore:getSharedObj", getSharedObj)
 
+---@param webhookName string
+---@return string as Webhook
 mCore.RequestWebhook = (function(webhookName)
     for i, v in pairs(mCore["webhooks"]) do
-        if i == string.lower(webhookName) then
+        if string.lower(i) == string.lower(webhookName) then
             return v
         end
     end
@@ -33,7 +36,19 @@ end)
 RegisterNetEvent("mCore:RequestWebhook", mCore.RequestWebhook)
 
 
-exports("getSharedObj", getSharedObj)
+---@param name string
+---@param v string
+---@return boolean as Successfully
+mCore.LoadWebhook = (function(name, v)
+    for i, v in pairs(mCore["webhooks"]) do
+        if string.lower(i) == string.lower(name) then
+            return false
+        end
+    end
+    mCore["webhooks"][name] = v
+    return true
+end)
+
 
 
 
@@ -588,8 +603,8 @@ function dupeWarn(src, item)
         mCore.RequestWebhook("exploit"), "mCore - DupeWarn")
 end
 
-RegisterNetEvent('mCore:playPtfx', function(nearbyPlayers,ptfxData)
+RegisterNetEvent('mCore:playPtfx', function(nearbyPlayers, ptfxData)
     for _, v in ipairs(nearbyPlayers) do
-        TriggerClientEvent('mCore:showPtfx', v, source,ptfxData)
+        TriggerClientEvent('mCore:showPtfx', v, source, ptfxData)
     end
 end)
