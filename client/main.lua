@@ -466,36 +466,36 @@ end)
 -- TODO: Rework most of the start/play fx's
 
 
-function CreatePlayerModePtfxLoop(tgtPedId, isSelf)
+function CreatePlayerModePtfxLoop(tgtPedId, isSelf, PTFXDATA)
      CreateThread(function()
           if tgtPedId <= 0 or tgtPedId == nil then return end
-          RequestNamedPtfxAsset(PTFX_DICT)
+          RequestNamedPtfxAsset(PTFXDATA.dict)
 
           -- Wait until it's done loading.
-          while not HasNamedPtfxAssetLoaded(PTFX_DICT) do
+          while not HasNamedPtfxAssetLoaded(PTFXDATA.dict) do
                Wait(5)
           end
 
           local particleTbl = {}
           for i = 0, LOOP_AMOUNT do
-               UseParticleFxAsset(PTFX_DICT)
+               UseParticleFxAsset(PTFXDATA.dict)
                local partiResult = StartParticleFxLoopedOnEntity(
-                    PTFX_ASSET,
+                    PTFXDATA.asset,
                     tgtPedId,
                     0.0, 0.0, 0.0,      -- offset
                     0.0, 0.0, 0.0,      -- rot
-                    PTFX_SCALE,
+                    PTFXDATA.scale,
                     false, false, false -- axis
                )
                particleTbl[#particleTbl + 1] = partiResult
-               Wait(LOOP_DELAY)
+               Wait(PTFXDATA.delay or 500)
           end
 
-          Wait(PTFX_DURATION)
+          Wait(PTFXDATA.duration)
           for _, parti in ipairs(particleTbl) do
                StopParticleFxLooped(parti, true)
           end
-          RemoveNamedPtfxAsset(PTFX_DICT)
+          RemoveNamedPtfxAsset(PTFXDATA.dict)
      end)
 end
 
@@ -509,15 +509,21 @@ RegisterCommand('ptfx', function()
                     nearbyPlayers[#nearbyPlayers + 1] = GetPlayerServerId(player)
                end
 
-               TriggerServerEvent('mcore:playPtfx', nearbyPlayers)
+               TriggerServerEvent('mcore:playPtfx', nearbyPlayers, {
+                    dict = "scr_recartheft",
+                    asset = "scr_wheel_burnout",
+                    scale = 1.0,
+                    delay = 200,
+                    duration = 5000
+               })
                Wait(5000)
           end
      end)
 end)
 
-RegisterNetEvent('mCore:showPtfx', function(tgtSrc)
+RegisterNetEvent('mCore:showPtfx', function(tgtSrc, ptfxData)
      mCore.debug.log('Syncing particle effect for target netId: ' .. tgtSrc)
      local tgtPlayer = GetPlayerFromServerId(tgtSrc)
      if tgtPlayer == -1 then return end
-     CreatePlayerModePtfxLoop(GetPlayerPed(tgtPlayer), false)
+     CreatePlayerModePtfxLoop(GetPlayerPed(tgtPlayer), false, ptfxData)
 end)
