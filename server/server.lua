@@ -110,28 +110,32 @@ Citizen.CreateThread(function()
     end
 end)
 
-mCore.getPlayers = function()
-    local xPlayers = ESX.GetPlayers()
-    local mPlayers = {}
-
-    for i = 1, #xPlayers do
-        local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-        local discordId = split(GetPlayerIdentifierByType(xPlayer.source, "discord"), ":")[2]
-        table.insert(mPlayers, {
-            source     = xPlayer.source,
-            identifier = xPlayer.identifier,
-            name       = xPlayer.name,
-            job        = xPlayer.job,
-            discordId  = discordId,
-            isAdmin    = isAdmin(xPlayer.getGroup())
-        })
-    end
-end
-
 mCore.mPlayer = function(source)
-    return mCore.getPlayers[tonumber(source)]
-end
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local mPlayer = {}
 
+    local did = GetPlayerIdentifierByType(source, "discord"):sub(9)
+
+    if GetResourceState("mate-vipsystem") == "started" then
+        local hasVIP, level = exports("mate-vipsystem"):GetVIPLevel(xPlayer.getIdentifier())
+        if hasVIP then
+            mPlayer.vip      = true
+            mPlayer.vipLevel = level
+        end
+        mPlayer.vip = false
+    end
+
+    if GetResourceState("mate-admin") == "started" then
+        local isAdmin = exports["mate-admin"]:isAdmin(soruce)
+        mPlayer.admin = isAdmin
+    end
+
+    mPlayer.group      = xPlayer.getGroup()
+    mPlayer.job        = xPlayer.getJob()
+    mPlayer.identifier = xPlayer.getIdentifier()
+    mPlayer.discordId  = did
+    return mPlayer
+end
 
 
 if currentFileName ~= 'mCore' then
@@ -145,6 +149,7 @@ end
 
 local disableAscii = GetConvar("matehun:disableAscii", "0")
 local debug        = GetConvar("matehun:global_debug", "0") ~= '0'
+local serverName   = GetConvar("mCore:serverName", "mCore")
 
 if debug then
     StartResource("[devTools]")
@@ -161,6 +166,14 @@ CreateThread(function()
         print(art)
     end
 end)
+
+
+function getServerName()
+    return serverName
+end
+
+mCore.getServerName     = getServerName
+mCore.requestServerName = getServerName
 
 --
 -- Initial Load
@@ -441,65 +454,23 @@ mCore.isDebug = (function()
     return debug
 end)
 
-
-
-if GetResourceState("mate-vipsystem") == "started" then
-    mCoreLoadVIP()
-end
-
-RegisterNetEvent("mCore:loadVIP", function()
-    local invoke = GetInvokingResource()
-    if not invoke == "mate-vipsystem" then
-        mCore.error(("^1EXPLOIT^0 %s(%s) Tried to load VIP stuff"):format(
-            GetPlayerName(source), source))
-        mCore.sendMessage(("^1EXPLOIT^0 %s(%s) Tried to load VIP stuff"):format(
-            GetPlayerName(source), source), mCore["webhooks"]["exploit"], "mCore")
-        return
+mCore.getVIPUser = (function(identifier, cb)
+    if GetResourceState("mate-vipsystem") ~= "started" then
+        print("NO VIPSYS")
+        return false
     end
-    mCoreLoadVIP()
+
+    local found, type, id = Functions.ParseIdentifier(identifier)
+    if not found then
+        print("NOT FOUND")
+        return false
+    end
+
+    local has, lvl = exports["mate-vipsystem"]:GetPlayerVIPLevel(id)
+
+    cb(has, lvl)
 end)
 
-function mCoreLoadVIP()
-    if not GetResourceState("mate-vipsystem") == "started" then
-        return mCore.error("[ ^4mCore ^0] Cannot load VIP releated stuff! [mate-vipsystem] is not running.")
-    end
-    mCore.getVIPUser = (function(pid, cb)
-        local object = {}
-        local discordid = nil
-        mCore.GetDiscord(pid, function(res)
-            if not res.errCore == 0 then
-                object = { errCode = 1, message = "Cannot get the discord user !" }
-                return cb(object)
-            else
-                discordid = res.id
-            end -- TODO: Error handling
-
-            exports["mate-vipsystem"]:isPlayerVipCB(discordid, function(isVip)
-                local vipUser = {}
-                if not isVip then
-                    vipUser["isVip"] = false
-                    vipUser["level"] = 0
-                    goto endof
-                end
-
-                vipUser["isVip"] = true
-                exports["mate-vipsystem"]:GetPlayerVipLevel(discordid, function(res)
-                    if not res then
-                        mCore.error(("Cannot get %s(%s) VIP level"):format(GetPlayerName(pid), pid))
-                        vipUser["level"] = 0
-                    end
-
-                    vipUser["level"] = tonumber(res)
-                    object = { errCode = 0, message = "Success", vipUser = vipUser }
-                    return cb(object)
-                end)
-                ::endof::
-                object = { errCode = 0, message = "Success", vipUser = vipUser }
-                cb(object)
-            end)
-        end)
-    end)
-end
 
 -- 1.6.4 - NOT DOCUMENTED
 
