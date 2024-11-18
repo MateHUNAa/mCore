@@ -139,7 +139,7 @@ function GetIcon(name)
           local textureLoaded = CreateRuntimeTextureFromImage(txd, iconPath, string.format("icons/%s.png", iconPath))
           if not textureLoaded then
                return print(("^7[^3mCore^7]: ^1Err:^7 Failed to create texture from image ^6'%s.png'^7."):format(
-               iconPath))
+                    iconPath))
           end
 
           local textureResolution = GetTextureResolution(iconPath, iconPath)
@@ -155,34 +155,6 @@ end
 
 mCore.GetIcon = GetIcon
 mCore.RequestIcon = GetIcon
-
-Citizen.CreateThread(function()
-     for i = 1, #Config.Icons do
-          local txd = CreateRuntimeTxd(Config.Icons[i])
-
-          if not HasStreamedTextureDictLoaded(Config.Icons[i]) then
-               return print(("^7[^3mCore^7]: ^1Err:^7 ^1CANNOT^2 create texture dict ^7'^6%s^7'^7"):format(Config.Icons
-                    [i]))
-          end
-
-          local textureLoaded = CreateRuntimeTextureFromImage(txd, Config.Icons[i],
-               string.format("icons/%s.png", Config.Icons[i]))
-
-          if not textureLoaded then
-               return print(("^7[^3mCore^7]: ^1Err:^7 Failed to create texture from image ^7'^6%s.png^7'^7"):format(
-                    Config.Icons[i]))
-          end
-
-          local textureResolution = GetTextureResolution(Config.Icons[i], Config.Icons[i])
-
-          if textureResolution.x == 0 and textureResolution.y == 0 then
-               return print(("^7[^3mCore^7]: ^2Err^7:^2 Texture is MISSING^7:  ^7(^6%s^7)"):format(Config.Icons[i]))
-          end
-     end
-
-     print("^7[^3mCore^7]: ^2All textures loaded successfully.^7")
-end)
-
 
 mCore.DrawCustomIcon = function(coords, icon)
      if not icon or type(icon) ~= "string" then return end
