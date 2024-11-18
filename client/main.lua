@@ -1,11 +1,12 @@
-mCore = {}
+mCore       = {}
+local inv   = exports.ox_inventory
+local debug = GetConvar("matehun:global_debug", "0") ~= '0'
 
 function export()
      return mCore
 end
 
 exports("getSharedObj", export)
-local debug   = GetConvar("matehun:global_debug", "0") ~= '0'
 
 mCore.isDebug = (function()
      return debug
@@ -15,12 +16,6 @@ mCore.Notify  = (function(title, message, type, dur)
      Config.CNotify(title, message, type, dur)
 end)
 
-
-
---
--- VAR's
---
-local inv = exports.ox_inventory
 
 --
 -- Function's
@@ -77,9 +72,6 @@ mCore.Draw3DText = (function(x, y, z, text, r, g, b, scales, font)
 
      ClearDrawOrigin()
 end)
-
-
-
 
 local loadedFonts = {}
 
@@ -185,9 +177,6 @@ mCore.DrawCustomIcon = function(coords, icon, drawOnEnts)
           drawOnEnts or false
      )
 end
-
-
-
 
 ---@param coords vector3
 ---@param icon string
@@ -463,8 +452,6 @@ end)
 
 
 -- 1.6.4 -- Not Documented
--- TODO: Rework most of the start/play fx's
-
 
 function CreatePlayerModePtfxLoop(tgtPedId, isSelf, PTFXDATA)
      CreateThread(function()
