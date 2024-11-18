@@ -588,8 +588,8 @@ function dupeWarn(src, item)
         mCore.RequestWebhook("exploit"), "mCore - DupeWarn")
 end
 
-RegisterNetEvent('mCore:playPtfx', function(nearbyPlayers)
+RegisterNetEvent('mCore:playPtfx', function(nearbyPlayers,ptfxData)
     for _, v in ipairs(nearbyPlayers) do
-        TriggerClientEvent('txcl:showPtfx', v, source)
+        TriggerClientEvent('mCore:showPtfx', v, source,ptfxData)
     end
 end)

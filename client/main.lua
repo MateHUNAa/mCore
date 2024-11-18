@@ -477,7 +477,7 @@ function CreatePlayerModePtfxLoop(tgtPedId, isSelf, PTFXDATA)
           end
 
           local particleTbl = {}
-          for i = 0, LOOP_AMOUNT do
+          for i = 0, PTFXDATA.LoopAmmount do
                UseParticleFxAsset(PTFXDATA.dict)
                local partiResult = StartParticleFxLoopedOnEntity(
                     PTFXDATA.asset,
@@ -499,26 +499,27 @@ function CreatePlayerModePtfxLoop(tgtPedId, isSelf, PTFXDATA)
      end)
 end
 
-RegisterCommand('ptfx', function()
-     CreateThread(function()
-          Wait(500)
-          while true do
-               local players = GetActivePlayers()
-               local nearbyPlayers = {}
-               for _, player in ipairs(players) do
-                    nearbyPlayers[#nearbyPlayers + 1] = GetPlayerServerId(player)
-               end
+---@param dict string
+---@param asset string
+---@param scale number
+---@param delay number
+---@param duration number
+---@param loopAmmount number
+mCore.PlayPTFX = (function(dict, asset, scale, delay, duration, loopAmmount)
+     local players = GetActivePlayers()
+     local nearbyPlayers = {}
+     for _, player in ipairs(players) do
+          nearbyPlayers[#nearbyPlayers + 1] = GetPlayerServerId(player)
+     end
 
-               TriggerServerEvent('mcore:playPtfx', nearbyPlayers, {
-                    dict = "scr_recartheft",
-                    asset = "scr_wheel_burnout",
-                    scale = 1.0,
-                    delay = 200,
-                    duration = 5000
-               })
-               Wait(5000)
-          end
-     end)
+     TriggerServerEvent('mCore:playPtfx', nearbyPlayers, {
+          dict        = dict,
+          asset       = asset,
+          scale       = scale,
+          delay       = delay,
+          duration    = duration,
+          LoopAmmount = loopAmmount
+     })
 end)
 
 RegisterNetEvent('mCore:showPtfx', function(tgtSrc, ptfxData)
