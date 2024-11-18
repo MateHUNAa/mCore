@@ -125,7 +125,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-mCore.mPlayer = function(source)
+mCore.mPlayer      = function(source)
     local xPlayer = ESX.GetPlayerFromId(source)
     local mPlayer = {}
 
@@ -186,9 +186,11 @@ mCore.requestServerName = getServerName
 
 Citizen.CreateThread(function()
     Wait(800)
-    local affectedRows = MySQL.update.await('UPDATE `owned_vehicles` SET `stored` = 1 WHERE `stored` = 0')
+    if Config.onServerStart.ReturnImpounded then
+        local affectedRows = MySQL.update.await('UPDATE `owned_vehicles` SET `stored` = 1 WHERE `stored` = 0')
 
-    print(string.format("[ ^4MateHUN-Exports ^0] Returned %s Vehicles from inbounded", affectedRows))
+        print(string.format("[ ^4MateHUN-Exports ^0] Returned %s Vehicles from impunded", affectedRows))
+    end
 end)
 
 RegisterNetEvent('esx:playerLoaded', function(player, xPlayer, isNew)

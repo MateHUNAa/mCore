@@ -5,7 +5,9 @@ Config.BotToken            = "" -- Discord bot token for `discord_rest`
 Config.Webhook             = "" -- Global Webhook !IMPORTANT!
 
 Config.UseCustomDeathEvent = true
+Config.onServerStart       = {
 
+}
 Config.JoinServer          = {
      Enable           = true,
      SendNotification = false
