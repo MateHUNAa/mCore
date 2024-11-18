@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-version '1.6.6'
+version '1.6.7'
 author 'MateHUN'
 description 'MateHUN <-> Exports'
 
