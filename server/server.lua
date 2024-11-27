@@ -368,7 +368,20 @@ mCore.GetDiscord = function(src, cb)
     end)
 end
 
+mCore.GetDiscordAwait = (function(pid)
+    local xPlayer = mCore.getXPlayer(pid)
+    local identifier = xPlayer.getIdentifier()
+    local res = MySQL.single.await(
+        "SELECT discord_url, discord_name, discordid FROM `users` WHERE identifier = @identifier", {
+            ['@identifier'] = identifier })
 
+    local obj = {
+        name = res["discord_name"],
+        img  = res["discord_url"],
+        id   = res["discordid"]
+    }
+    return obj
+end)
 
 mCore.GetDiscordByIdentifier = (function(identifer, cb)
     if not identifer then
@@ -461,13 +474,30 @@ mCore.isDebug = (function()
     return debug
 end)
 
+
+mCore.getVIPUserAsync = (function(identifier)
+    if GetResourceState("mate-vipsystem") ~= "started" then
+        print("NO VIPSYS")
+        return false, 0
+    end
+
+    local found, type, id = Functions.ParseIdentifiers(identifier)
+    if not found then
+        print("NOT FOUND")
+        return false, 0
+    end
+
+    local has, lvl = exports["mate-vipsystem"]:GetPlayerVIPLevel(id)
+
+    return has, lvl
+end)
 mCore.getVIPUser = (function(identifier, cb)
     if GetResourceState("mate-vipsystem") ~= "started" then
         print("NO VIPSYS")
-        return false
+        cb(false, 0)
     end
 
-    local found, type, id = Functions.ParseIdentifier(identifier)
+    local found, type, id = Functions.ParseIdentifiers(identifier)
     if not found then
         print("NOT FOUND")
         return false

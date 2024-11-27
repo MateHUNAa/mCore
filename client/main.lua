@@ -469,10 +469,10 @@ function CreatePlayerModePtfxLoop(tgtPedId, isSelf, PTFXDATA)
                local partiResult = StartParticleFxLoopedOnEntity(
                     PTFXDATA.asset,
                     tgtPedId,
-                    0.0, 0.0, 0.0,      -- offset
-                    0.0, 0.0, 0.0,      -- rot
+                    PTFXDATA.offset.x or 0.0, PTFXDATA.offset.y or 0.0, PTFXDATA.offset.z or 0.0, -- offset
+                    0.0, 0.0, 0.0,                                           -- rot
                     PTFXDATA.scale,
-                    false, false, false -- axis
+                    false, false, false                                      -- axis
                )
                particleTbl[#particleTbl + 1] = partiResult
                Wait(PTFXDATA.delay or 500)
@@ -492,7 +492,8 @@ end
 ---@param delay number
 ---@param duration number
 ---@param loopAmmount number
-mCore.PlayPTFX = (function(dict, asset, scale, delay, duration, loopAmmount)
+---@param offset vector3
+mCore.PlayPTFX = (function(dict, asset, scale, delay, duration, loopAmmount, offset)
      local players = GetActivePlayers()
      local nearbyPlayers = {}
      for _, player in ipairs(players) do
@@ -505,7 +506,8 @@ mCore.PlayPTFX = (function(dict, asset, scale, delay, duration, loopAmmount)
           scale       = scale,
           delay       = delay,
           duration    = duration,
-          LoopAmmount = loopAmmount
+          LoopAmmount = loopAmmount,
+          offset      = offset
      })
 end)
 
