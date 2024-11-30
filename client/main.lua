@@ -63,7 +63,7 @@ mCore.Draw3DText = (function(x, y, z, text, r, g, b, scales, font)
      SetTextDropShadow()
 
      SetTextWrap(0.0, 1.0)
-     SetTextColour(r or 255, g or 255, b or 255, 2555)
+     SetTextColour(r or 255, g or 255, b or 255, 255)
      SetTextOutline()
      SetTextCentre(true)
      BeginTextCommandDisplayText("STRING")
