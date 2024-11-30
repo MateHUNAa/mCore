@@ -1,38 +1,39 @@
-Config                     = {}
+Config                   = {}
 
 ---@type string
-Config.BotToken            = MYCFG.DISCORD_TOKEN -- Discord bot token for `discord_rest`
+Config.BotToken          = MYCFG.DISCORD_TOKEN -- Discord bot token for `discord_rest`
 
 ---@type string
-Config.Webhook             = MYCFG.G_HOOK -- Global Webhook !IMPORTANT!
+Config.Webhook           = MYCFG.G_HOOK -- Global Webhook !IMPORTANT!
 
-Config.UseCustomDeathEvent = true
-Config.onServerStart       = {
+Config.DeathHandle = true
+
+Config.onServerStart     = {
      ReturnImpounded = true
 }
-Config.JoinServer          = {
+Config.JoinServer        = {
      Enable           = true,
      SendNotification = false
 }
 
-Config.PlayTime            = {
+Config.PlayTime          = {
      Enable = true
 }
 
-Config.weaponDamage        = {
+Config.weaponDamage      = {
      Enable                = true,
      ChangeMeeleDamage     = false,
      DisablePistolWhipping = false,
 }
 
-Config.Webhooks            = {
+Config.Webhooks          = {
      ---@type string
      ['money']   = MYCFG.HOOKS.money,
      ["error"]   = MYCFG.HOOKS.error,
      ["exploit"] = MYCFG.HOOKS.exploit
 }
 
-Config.NotifyTypes         = {
+Config.NotifyTypes       = {
      ["info"]    = true,
      ["success"] = true,
      ["error"]   = true,
@@ -40,7 +41,7 @@ Config.NotifyTypes         = {
      ["ems"]     = true,
 }
 
-Config.Notify              = (function(playerId, title, message, type, dur)
+Config.Notify            = (function(playerId, title, message, type, dur)
      if not Config.NotifyTypes[type] then
           for t in pairs(Config.NotifyTypes) do
                if not type == t then type = Config.NotifyTypes[1] end
@@ -53,7 +54,7 @@ Config.Notify              = (function(playerId, title, message, type, dur)
      TriggerClientEvent("codem-notification:Create", playerId, message, type, title, dur)
 end)
 
-Config.CNotify             = (function(title, message, type, dur)
+Config.CNotify           = (function(title, message, type, dur)
      if not Config.NotifyTypes[type] then
           for t in pairs(Config.NotifyTypes) do
                if not type == t then type = Config.NotifyTypes[1] end
