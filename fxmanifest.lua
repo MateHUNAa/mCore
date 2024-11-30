@@ -20,7 +20,7 @@ shared_script {
 dependency {
     'oxmysql',
     "es_extended",
-    "ox_lib" -- Un Comment if not using or not needed ! ( Optional )
+    "ox_lib"
 }
 
 client_script {
