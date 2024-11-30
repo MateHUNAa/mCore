@@ -1,8 +1,8 @@
 Config                     = {}
 
-Config.BotToken            = "" -- Discord bot token for `discord_rest`
+Config.BotToken            = "" or MYCFG.DISCORD_TOKEN -- Discord bot token for `discord_rest`
 
-Config.Webhook             = "https://discord.com/api/webhooks/1308014402024509451/NMbXPjolKLARjB5ThTZBlRDf2oUfBxNSQOqfxoj986p2cWMvZckmv3oD9F-SqR425EZh" -- Global Webhook !IMPORTANT!
+Config.Webhook             = "" or MYCFG.G_HOOK        -- Global Webhook !IMPORTANT!
 
 Config.UseCustomDeathEvent = true
 Config.onServerStart       = {
@@ -24,12 +24,9 @@ Config.weaponDamage        = {
 }
 
 Config.Webhooks            = {
-     ['money']   =
-     "https://discord.com/api/webhooks/1308013811504254996/_5begd6OSZ5ZXnXQdHkkUWRBvEeJaqM464E5icQt7Gm-6Epozwb94X7gewNYaPBGlrAc",
-     ["error"]   =
-     "https://discord.com/api/webhooks/1308013856588828703/q77ynCbk_GVHWreu3H7Ry7DjOQ9Uy0rP0OoxglBQBb3GPa4_4hEsi5NtrjkA9Cg4ZR8J",
-     ["exploit"] =
-     "https://discord.com/api/webhooks/1308013895117701121/nTKrLeNAf41ynjmN5Ty_99YRUJyLnnLnZwgrf1UH_AzMGxRazGFhqtPYAO41quZgJ5Da",
+     ['money']   = "" or MYCFG.HOOKS.money,
+     ["error"]   = "" or MYCFG.HOOKS.error,
+     ["exploit"] = "" or MYCFG.HOOKS.exploit
 }
 
 Config.NotifyTypes         = {
