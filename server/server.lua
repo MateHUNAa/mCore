@@ -116,33 +116,6 @@ if Config.VersionCheck then
     mCore.versionCheck("MateHUNAa/mCore")
 end
 
-mCore.mPlayer      = function(source)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    local mPlayer = {}
-
-    local did = GetPlayerIdentifierByType(source, "discord"):sub(9)
-
-    if GetResourceState("mate-vipsystem") == "started" then
-        local hasVIP, level = exports("mate-vipsystem"):GetVIPLevel(xPlayer.getIdentifier())
-        if hasVIP then
-            mPlayer.vip      = true
-            mPlayer.vipLevel = level
-        end
-        mPlayer.vip = false
-    end
-
-    if GetResourceState("mate-admin") == "started" then
-        local isAdmin = exports["mate-admin"]:isAdmin(soruce)
-        mPlayer.admin = isAdmin
-    end
-
-    mPlayer.group      = xPlayer.getGroup()
-    mPlayer.job        = xPlayer.getJob()
-    mPlayer.identifier = xPlayer.getIdentifier()
-    mPlayer.discordId  = did
-    return mPlayer
-end
-
 local disableAscii = GetConvar("matehun:disableAscii", "0")
 local debug        = GetConvar("matehun:global_debug", "0") ~= '0'
 local serverName   = GetConvar("mCore:serverName", "mCore")
