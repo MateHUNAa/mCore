@@ -26,26 +26,3 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-----------------------------------------------------------------------------
--- Disable Pistole Whiping
-----------------------------------------------------------------------------
-
-Citizen.CreateThread(function()
-	if Config.weaponDamage.Enable then
-		if Config.weaponDamage.DisablePistolWhipping then
-			while true do
-				Citizen.Wait(100)
-				local ped = PlayerPedId()
-				if IsPedArmed(ped, 4) then
-					local weapon = GetCurrentPedWeapon(ped, 1)
-					DisableControlAction(1, 140, true)
-					DisableControlAction(1, 141, true)
-					DisableControlAction(1, 142, true)
-					SetPedAccuracy(ped, 100)
-					SetWeaponRecoilShakeAmplitude(weapon, 100)
-				end
-			end
-		end
-	end
-end)

@@ -21,9 +21,8 @@ Config.PlayTime      = {
 }
 
 Config.weaponDamage  = {
-     Enable                = true,
+     Enable                = false,
      ChangeMeeleDamage     = false,
-     DisablePistolWhipping = false,
 }
 
 Config.Webhooks      = {
