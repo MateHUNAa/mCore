@@ -1,16 +1,19 @@
 Config               = {}
 
 ---@type string
-Config.BotToken      = MYCFG.DISCORD_TOKEN     -- Discord bot token for `discord_rest`
+Config.BotToken      = MYCFG.DISCORD_TOKEN -- Discord bot token for `discord_rest`
 
 ---@type string
-Config.Webhook       = MYCFG.G_HOOK     -- Global Webhook !IMPORTANT!
+Config.Webhook       = MYCFG.G_HOOK -- Global Webhook !IMPORTANT!
 
 Config.DeathHandle   = true
+
+Config.VersionCheck  = true -- Recommended True
 
 Config.onServerStart = {
      ReturnImpounded = true
 }
+
 Config.JoinServer    = {
      Enable           = true,
      SendNotification = false
@@ -21,8 +24,8 @@ Config.PlayTime      = {
 }
 
 Config.weaponDamage  = {
-     Enable                = false,
-     ChangeMeeleDamage     = false,
+     Enable            = false,
+     ChangeMeeleDamage = false,
 }
 
 Config.Webhooks      = {

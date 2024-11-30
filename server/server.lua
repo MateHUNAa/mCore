@@ -112,18 +112,9 @@ mCore.versionCheck = function(repository)
             end, 'GET')
     end)
 end
-mCore.versionCheck("MateHUNAa/mCore")
-
-Citizen.CreateThread(function()
-    local vc = GetConvar("matehun:versionCheckLoop", "0") ~= '0'
-    mCore.debug.log(("^7[^2Version^7]: ^2 Check Loop: ^6%s"):format(vc))
-    if vc then
-        while true do
-            Citizen.Wait(35 * 1000)
-            mCore.versionCheck("MateHUNAa/mCore")
-        end
-    end
-end)
+if Config.VersionCheck then
+    mCore.versionCheck("MateHUNAa/mCore")
+end
 
 mCore.mPlayer      = function(source)
     local xPlayer = ESX.GetPlayerFromId(source)
