@@ -13,6 +13,10 @@ CreateThread((function()
      while true do
           Wait(0)
 
+          if not Config.DeathHandle then
+               break
+          end
+
           local player = PlayerId()
           if NetworkIsPlayerActive(player) then
                local playerPed = PlayerPedId()

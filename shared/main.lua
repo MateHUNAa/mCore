@@ -19,3 +19,9 @@ function getWebhook()
 end
 
 exports('getHook', getWebhook)
+
+
+
+MathRound = (function(value, numDecimals)
+     return tonumber(string.format("%." .. (numDecimals or 0) .. "f", value))
+end)
