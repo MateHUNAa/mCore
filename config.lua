@@ -1,8 +1,10 @@
 Config                     = {}
 
-Config.BotToken            = "" or MYCFG.DISCORD_TOKEN -- Discord bot token for `discord_rest`
+---@type string
+Config.BotToken            = MYCFG.DISCORD_TOKEN -- Discord bot token for `discord_rest`
 
-Config.Webhook             = "" or MYCFG.G_HOOK        -- Global Webhook !IMPORTANT!
+---@type string
+Config.Webhook             = MYCFG.G_HOOK -- Global Webhook !IMPORTANT!
 
 Config.UseCustomDeathEvent = true
 Config.onServerStart       = {
@@ -24,9 +26,10 @@ Config.weaponDamage        = {
 }
 
 Config.Webhooks            = {
-     ['money']   = "" or MYCFG.HOOKS.money,
-     ["error"]   = "" or MYCFG.HOOKS.error,
-     ["exploit"] = "" or MYCFG.HOOKS.exploit
+     ---@type string
+     ['money']   = MYCFG.HOOKS.money,
+     ["error"]   = MYCFG.HOOKS.error,
+     ["exploit"] = MYCFG.HOOKS.exploit
 }
 
 Config.NotifyTypes         = {
