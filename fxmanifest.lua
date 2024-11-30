@@ -32,14 +32,7 @@ server_script {
 }
 
 escrow_ignore {
-    'config.lua',
-    'client/*.*',
-    'server/*.*',
-    'shared/*.*',
-    'icons/*.png',
-    'user-snippets.json',
-    'readme.md',
-
+    "**.*" -- IGNORE *
 }
 
 files {
