@@ -120,10 +120,6 @@ local disableAscii = GetConvar("matehun:disableAscii", "0")
 local debug        = GetConvar("matehun:global_debug", "0") ~= '0'
 local serverName   = GetConvar("mCore:serverName", "mCore")
 
-if debug then
-    StartResource("[devTools]")
-end
-
 CreateThread(function()
     Wait(1300)
 
@@ -138,7 +134,7 @@ end)
 
 
 function getServerName()
-    return serverName
+    return serverName or "[mCore] ServerName Not set"
 end
 
 mCore.getServerName     = getServerName
@@ -289,11 +285,7 @@ mCore.getXPlayer = function(source)
 end
 
 function getBotToken()
-    local s, r = pcall(function()
-        local token = Config.BotToken
-        return token
-    end)
-    if not s then return mCore.debug.error(r) end
+    return Config.BotToken
 end
 
 exports('getDiscordToken', getBotToken)
@@ -314,15 +306,15 @@ mCore.GetDiscord = function(src, cb)
     }, function(res)
         if res and #res > 0 then
             local dUser = {
-                img = res[1].discord_url,
+                img  = res[1].discord_url,
                 name = res[1].discord_name,
-                id = res[1].discordid
+                id   = res[1].discordid
             }
             object = {
-                img = res[1].discord_url,
-                name = res[1].discord_name,
-                id = res[1].discordid,
-                dUser = dUser,
+                img     = res[1].discord_url,
+                name    = res[1].discord_name,
+                id      = res[1].discordid,
+                dUser   = dUser,
                 errCode = 0
             }
         else

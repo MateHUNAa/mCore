@@ -10,6 +10,7 @@ shared_script '@es_extended/imports.lua'
 server_script "@oxmysql/lib/MySQL.lua"
 
 shared_script {
+    "my_config.lua",
     '@es_extended/imports.lua',
     '@ox_lib/init.lua',
     'config.lua',
@@ -42,6 +43,6 @@ files {
 
 
 files {
-	'stream/*',
-	'assets/*'
+    'stream/*',
+    'assets/*'
 }
