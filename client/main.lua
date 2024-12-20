@@ -450,7 +450,9 @@ mCore.pairsByKeys = (function(t)
      return iter
 end)
 
-
+mCore.FadeTP = function(coords, fadeTime)
+     SetEntityCoords(PlayerPedId(), coords.x, coords.y, coords.z)
+end
 -- 1.6.4 -- Not Documented
 
 function CreatePlayerModePtfxLoop(tgtPedId, isSelf, PTFXDATA)
@@ -470,9 +472,9 @@ function CreatePlayerModePtfxLoop(tgtPedId, isSelf, PTFXDATA)
                     PTFXDATA.asset,
                     tgtPedId,
                     PTFXDATA.offset.x or 0.0, PTFXDATA.offset.y or 0.0, PTFXDATA.offset.z or 0.0, -- offset
-                    0.0, 0.0, 0.0,                                           -- rot
+                    0.0, 0.0, 0.0,                                                                -- rot
                     PTFXDATA.scale,
-                    false, false, false                                      -- axis
+                    false, false, false                                                           -- axis
                )
                particleTbl[#particleTbl + 1] = partiResult
                Wait(PTFXDATA.delay or 500)

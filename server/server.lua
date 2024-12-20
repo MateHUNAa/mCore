@@ -179,7 +179,6 @@ AddEventHandler("playerConnecting", (function(name, setKickRes, deferrals)
                     user.global_name,
                     idf
                 }, (function(resp)
-
                     if resp then
                         deferrals.done()
                     else
@@ -258,8 +257,12 @@ function createSQLColumnToUsers(name, type, size)
         if exists then
             p:resolve(false)
         else
-            local alterQuery = string.format("ALTER TABLE `users` ADD COLUMN `%s` %s(%d) NULL", tostring(name),
-                tostring(type), tonumber(size))
+            local alterQuery = string.format(
+                "ALTER TABLE `users` ADD COLUMN `%s` %s(%d) COLLATE utf8mb4_unicode_ci NULL",
+                tostring(name),
+                tostring(type),
+                tonumber(size)
+            )
             MySQL.query(alterQuery, function()
                 p:resolve(true)
             end)
