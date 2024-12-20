@@ -153,32 +153,43 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent('esx:playerLoaded', function(player, xPlayer, isNew)
-    while not xPlayer do Wait(255) end
+AddEventHandler("playerConnecting", (function(name, setKickRes, deferrals)
+    local pid = source
+    deferrals.defer()
 
-    local discordId = GetPlayerIdentifierByType(xPlayer.source, "discord")
-    local cleanId   = split(discordId, ":")[2]
+    Wait(0)
 
-    if not discordId then return mCore.error("Cannot fetch user discord id !") end
+    deferrals.update(string.format("Hello %s! Checking discord status", name))
 
-    exports.discord_rest:getUserForPlayer(xPlayer.source):next(function(user)
-        local picture = string.format(Config.profilePicTemplateString, user.id, user.avatar)
 
-        MySQL.update('UPDATE users SET discord_url = ?, discord_name = ? WHERE identifier = ?', {
-            picture,
-            user.global_name,
-            xPlayer.identifier
-        }, function(affectedRows)
-        end)
-    end)
+    local discordId = GetPlayerIdentifierByType(pid, "discord"):sub(9)
+    local idf = GetPlayerIdentifierByType(pid, "license"):sub(9)
+    Wait(0)
+    if not discordId then
+        deferrals.done("Not found any linked discord account !")
+        CancelEvent()
+    else
+        exports["discord_rest"]:getUser(discordId):next((function(user)
+            local picture = string.format(Config.profilePicTemplateString, user.id, user.avatar)
 
-    MySQL.Async.execute('UPDATE `users` SET discordid = @discordid WHERE identifier = @identifier', {
-        ['@discordid'] = cleanId,
-        ['@identifier'] = xPlayer.identifier
-    }, function(rowsChanged)
-        mCore.debug.log('Rows changed: ' .. tostring(rowsChanged))
-    end)
-end)
+            MySQL.update(
+                "UPDATE `users` SET discordid = ?, discord_url = ?, discord_name = ? WHERE identifier = ?", {
+                    user.id,
+                    picture,
+                    user.global_name,
+                    idf
+                }, (function(resp)
+
+                    if resp then
+                        deferrals.done()
+                    else
+                        deferrals.done("Something went wrong while tried to save your data please try again!")
+                    end
+                end))
+        end))
+    end
+end))
+
 
 
 --
